@@ -10,6 +10,7 @@ import java.io.Serializable;
 public class ReportEntity implements Serializable {
     private static final long serialVersionUID = -3286175499784576165L;
     private String name;
+    private String num;
     private String sex;
     private String sicks;
     private String p53Res;
@@ -34,9 +35,20 @@ public class ReportEntity implements Serializable {
     private String cereLevel;
     private String infaRisk;
     private String infaLevel;
+    private String ovarianRisk;
+    private String ovarianLevel;
+    private String endomRisk;
+    private String endomLevel;
+    private String breastRisk;
+    private String breastLevel;
+    private String femoralRisk;
+    private String femoralLevel;
+    private String cataRisk;
+    private String cataLevel;
     private PictureData p53Pic1;
     private PictureData aopePic1;
     private String resOnes;
+    private String resTwos;
     private String helthManage;
     private String helthManageContent;
 
@@ -279,5 +291,101 @@ public class ReportEntity implements Serializable {
 
     public void setHelthManageContent(String helthManageContent) {
         this.helthManageContent = helthManageContent;
+    }
+
+    public String getOvarianRisk() {
+        return ovarianRisk;
+    }
+
+    public void setOvarianRisk(String ovarianRisk) {
+        this.ovarianRisk = ovarianRisk;
+    }
+
+    public String getOvarianLevel() {
+        return ovarianLevel;
+    }
+
+    public void setOvarianLevel(String ovarianLevel) {
+        this.ovarianLevel = ovarianLevel;
+    }
+
+    public String getEndomRisk() {
+        return endomRisk;
+    }
+
+    public void setEndomRisk(String endomRisk) {
+        this.endomRisk = endomRisk;
+    }
+
+    public String getEndomLevel() {
+        return endomLevel;
+    }
+
+    public void setEndomLevel(String endomLevel) {
+        this.endomLevel = endomLevel;
+    }
+
+    public String getBreastLevel() {
+        return breastLevel;
+    }
+
+    public void setBreastLevel(String breastLevel) {
+        this.breastLevel = breastLevel;
+    }
+
+    public String getBreastRisk() {
+        return breastRisk;
+    }
+
+    public void setBreastRisk(String breastRisk) {
+        this.breastRisk = breastRisk;
+    }
+
+    public String getFemoralRisk() {
+        return femoralRisk;
+    }
+
+    public void setFemoralRisk(String femoralRisk) {
+        this.femoralRisk = femoralRisk;
+    }
+
+    public String getFemoralLevel() {
+        return femoralLevel;
+    }
+
+    public void setFemoralLevel(String femoralLevel) {
+        this.femoralLevel = femoralLevel;
+    }
+
+    public String getCataRisk() {
+        return cataRisk;
+    }
+
+    public void setCataRisk(String cataRisk) {
+        this.cataRisk = cataRisk;
+    }
+
+    public String getCataLevel() {
+        return cataLevel;
+    }
+
+    public void setCataLevel(String cataLevel) {
+        this.cataLevel = cataLevel;
+    }
+
+    public String getResTwos() {
+        return resTwos;
+    }
+
+    public void setResTwos(String resTwos) {
+        this.resTwos = resTwos;
+    }
+
+    public String getNum() {
+        return num;
+    }
+
+    public void setNum(String num) {
+        this.num = num;
     }
 }
