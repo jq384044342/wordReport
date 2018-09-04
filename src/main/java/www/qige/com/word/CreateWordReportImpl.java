@@ -7,6 +7,7 @@ import org.apache.xmlbeans.impl.common.ConcurrentReaderHashMap;
 import www.qige.com.App;
 import www.qige.com.entity.ReportEntity;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
@@ -60,9 +61,14 @@ public class CreateWordReportImpl {
         map.put("helthManageContent",entity.getHelthManageContent());
         PictureData p53Pic = (PictureData) entity.getP53Pic1();
         PictureData apoePic = (PictureData) entity.getAopePic1();
+
+        File picTmpPath = new File("D:\\tmp\\") ;
+        if(!picTmpPath.exists()){
+            picTmpPath.mkdirs();
+        }
         try {
             FileOutputStream out = new FileOutputStream(
-                    "D:\\gitProject\\worReport\\"+entity.getNum()+"p53"+".png");
+                    picTmpPath+entity.getNum()+"p53"+".png");
             out.write(p53Pic.getData());
             out.close();
         } catch (IOException e) {
@@ -70,19 +76,22 @@ public class CreateWordReportImpl {
         }
         try {
             FileOutputStream out = new FileOutputStream(
-                    "D:\\gitProject\\worReport\\"+entity.getNum()+"apoe"+".png");
+                    picTmpPath+entity.getNum()+"apoe"+".png");
             out.write(apoePic.getData());
             out.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        map.put("p53Pic",new PictureRenderData(465, 80,"D:\\gitProject\\worReport\\"+ entity.getNum()+"p53"+".png"));
-        map.put("aopePic",new PictureRenderData(465, 80,"D:\\gitProject\\worReport\\"+ entity.getNum()+"apoe"+".png"));
+
+        map.put("p53Pic",new PictureRenderData(465, 80,picTmpPath+ entity.getNum()+"p53"+".png"));
+        map.put("aopePic",new PictureRenderData(465, 80,picTmpPath+ entity.getNum()+"apoe"+".png"));
         String template1;
         if("男".equals((String)map.get("sex"))){
-            template1 = App.class.getClassLoader().getResource("man.docx").getPath();
+//            template1 = App.class.getClassLoader().getResource("man.docx").getPath();
+            template1 = "template\\man.docx";
         }else if("女".equals((String)map.get("sex"))){
-            template1 = App.class.getClassLoader().getResource("woman.docx").getPath();
+//            template1 = App.class.getClassLoader().getResource("woman.docx").getPath();
+            template1 = "template\\woman.docx";
         }else {
             return;
         }
