@@ -10,6 +10,7 @@ import java.io.Serializable;
 public class ReportEntity implements Serializable {
     private static final long serialVersionUID = -3286175499784576165L;
     private String name;
+    private String fileName;
     private String num;
     private String sex;
     private String sicks;
@@ -387,5 +388,13 @@ public class ReportEntity implements Serializable {
 
     public void setNum(String num) {
         this.num = num;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 }

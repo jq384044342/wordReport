@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 public class CreateReportAction extends JFrame implements ActionListener{
@@ -20,8 +21,8 @@ public class CreateReportAction extends JFrame implements ActionListener{
     JButton jbReport = new JButton("生成报告");
     private Map<Integer, Map<Integer,Object>> personInfo;
     private Map<Integer, Map<Integer,Object>> resultInfo;
-    private java.util.List<String> resultTime;
-    private Map<String, Map<Integer,Object>> resultMap;
+    private java.util.List<String> resultTime = new ArrayList<>();
+    private Map<String, Map<Integer,Object>> resultMap = new HashMap<>();
     java.util.List<ReportEntity> reportList = new ArrayList<ReportEntity>();
 
     public CreateReportAction(){
@@ -34,9 +35,11 @@ public class CreateReportAction extends JFrame implements ActionListener{
         jbPerson.setSize(20,20);
         jbResult.setSize(20,20);
         jbReport.setSize(20,20);
-        this.getContentPane().add(jbPerson, BorderLayout.NORTH);//建立容器使用边界布局
-        this.getContentPane().add(jbResult, BorderLayout.CENTER);//建立容器使用边界布局
-        this.getContentPane().add(jbReport, BorderLayout.SOUTH);//建立容器使用边界布局
+        Container container = this.getContentPane();
+        container.setLayout(new FlowLayout());
+        container.add(jbPerson);//建立容器使用边界布局
+        container.add(jbResult);//建立容器使用边界布局
+        container.add(jbReport);//建立容器使用边界布局
         //
         jbPerson.addActionListener(this);
         jbResult.addActionListener(this);
@@ -72,10 +75,13 @@ public class CreateReportAction extends JFrame implements ActionListener{
                 //男性P53 rs1042522 APOE rs429358 女性 P53 rs1042522 MTHFR rs1801133
                 resultInfo = readExcelUtils.readExcelContent();
                 for(Map.Entry<Integer, Map<Integer, Object>> entry : resultInfo.entrySet()){
-                    if(StringUtils.isNoneEmpty((String)entry.getValue().get(1))){
+                    if(StringUtils.isNotEmpty((String)entry.getValue().get(1))){
                         String num = (String)entry.getValue().get(1);
+                        if(num.contains(".0")){
+                            num = num.replace(".0","");
+                        }
                         String geneNum = (String)entry.getValue().get(3);
-                        resultTime.add((String)entry.getValue().get(1));
+                        resultTime.add(num);
                         resultMap.put(num+geneNum,entry.getValue());
                     }
                 }
@@ -88,12 +94,16 @@ public class CreateReportAction extends JFrame implements ActionListener{
             try {
 
                 for(Map.Entry<Integer, Map<Integer, Object>> entry : personInfo.entrySet()){
-                    if(StringUtils.isNoneEmpty((String)entry.getValue().get(1))){
+                    if(StringUtils.isNotEmpty((String)entry.getValue().get(1))){
                         ReportEntity entity = new ReportEntity();
                         String num = (String) entry.getValue().get(1);
+                        if(num.contains(".0")){
+                            num = num.replace(".0","");
+                        }
                         if(2 == Collections.frequency(resultTime,num)){
                             entity.setName((String) entry.getValue().get(2));
-                            entity.setNum((String) entry.getValue().get(1));
+                            entity.setFileName((String) entry.getValue().get(0));
+                            entity.setNum(num);
                             String sex = (String) entry.getValue().get(3);
                             entity.setSex(sex);
                             entity.setSicks((String) entry.getValue().get(4));

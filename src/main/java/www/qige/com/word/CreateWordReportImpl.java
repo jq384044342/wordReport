@@ -1,6 +1,7 @@
 package www.qige.com.word;
 
 import com.deepoove.poi.XWPFTemplate;
+import com.deepoove.poi.data.PictureRenderData;
 import org.apache.poi.ss.usermodel.PictureData;
 import org.apache.xmlbeans.impl.common.ConcurrentReaderHashMap;
 import www.qige.com.App;
@@ -61,7 +62,7 @@ public class CreateWordReportImpl {
         PictureData apoePic = (PictureData) entity.getAopePic1();
         try {
             FileOutputStream out = new FileOutputStream(
-                    entity.getNum()+"p53"+".png");
+                    "D:\\gitProject\\worReport\\"+entity.getNum()+"p53"+".png");
             out.write(p53Pic.getData());
             out.close();
         } catch (IOException e) {
@@ -69,14 +70,14 @@ public class CreateWordReportImpl {
         }
         try {
             FileOutputStream out = new FileOutputStream(
-                    entity.getNum()+"apoe"+".png");
+                    "D:\\gitProject\\worReport\\"+entity.getNum()+"apoe"+".png");
             out.write(apoePic.getData());
             out.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        map.put("p53Pic1",entity.getNum()+"p53"+".png");
-        map.put("aopePic1",entity.getNum()+"apoe"+".png");
+        map.put("p53Pic",new PictureRenderData(465, 80,"D:\\gitProject\\worReport\\"+ entity.getNum()+"p53"+".png"));
+        map.put("aopePic",new PictureRenderData(465, 80,"D:\\gitProject\\worReport\\"+ entity.getNum()+"apoe"+".png"));
         String template1;
         if("男".equals((String)map.get("sex"))){
             template1 = App.class.getClassLoader().getResource("man.docx").getPath();
@@ -88,7 +89,7 @@ public class CreateWordReportImpl {
 
         XWPFTemplate template = XWPFTemplate.compile(template1).render(map);
         try {
-            FileOutputStream out = new FileOutputStream(entity.getNum()+entity.getName()+".docx");
+            FileOutputStream out = new FileOutputStream(entity.getFileName()+".docx");
             template.write(out);
             out.flush();
             out.close();
