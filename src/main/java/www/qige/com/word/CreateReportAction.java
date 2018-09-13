@@ -19,6 +19,18 @@ public class CreateReportAction extends JFrame implements ActionListener{
     JButton jbPerson = new JButton("导入个人信息");
     JButton jbResult = new JButton("导入检测结果");
     JButton jbReport = new JButton("生成报告");
+    JTextArea   textarea   = new JTextArea ("\n"
+            +"使用说明\n" +
+            "\n"+
+            "注意事项：请勿删除任何文件夹！！！\n" +
+            "\n"+
+            "1.点击start.bat启动程序，启动可能需要1-5s时间，请耐心等待\n" +
+            "\n"+
+            "2.点击导入个人信息按钮，导入文件，弹出导入个人信息成功后进入下一步\n" +
+            "\n"+
+            "3.点击导入检测结果，导入文件，弹出导入检测成功后进入下一步\n" +
+            "\n"+
+            "4.点击生成报告，弹出生成报告成功后，在report文件夹下生成报告\n");
     private Map<Integer, Map<Integer,Object>> personInfo;
     private Map<Integer, Map<Integer,Object>> resultInfo;
     private java.util.List<String> resultTime = new ArrayList<>();
@@ -35,11 +47,16 @@ public class CreateReportAction extends JFrame implements ActionListener{
         jbPerson.setSize(20,20);
         jbResult.setSize(20,20);
         jbReport.setSize(20,20);
+        //初始化一个文字区域
+
+        textarea.setFont(new Font("黑体",Font.BOLD,16));
+        textarea.setEditable(false);
         Container container = this.getContentPane();
         container.setLayout(new FlowLayout());
         container.add(jbPerson);//建立容器使用边界布局
         container.add(jbResult);//建立容器使用边界布局
         container.add(jbReport);//建立容器使用边界布局
+        container.add(textarea);
         //
         jbPerson.addActionListener(this);
         jbResult.addActionListener(this);
@@ -106,7 +123,13 @@ public class CreateReportAction extends JFrame implements ActionListener{
                             entity.setNum(num);
                             String sex = (String) entry.getValue().get(3);
                             entity.setSex(sex);
-                            entity.setSicks((String) entry.getValue().get(4));
+                            StringBuffer sbSicks = new StringBuffer();
+                            for(int i = 4;i< entry.getValue().size();i++){
+                                if(StringUtils.isNoneEmpty((String)entry.getValue().get(i))){
+                                    sbSicks.append((String)entry.getValue().get(i));
+                                }
+                            }
+                            entity.setSicks(sbSicks.toString());
                             String p53Res = (String) resultMap.get(num + "rs1042522").get(5);
                             entity.setP53Res(p53Res);
                             String p53Type = getP53Type(p53Res);
@@ -136,65 +159,78 @@ public class CreateReportAction extends JFrame implements ActionListener{
                                 setRiskAndLevelWomen(p53Type,apoeType,entity);
                             }
                             //结果分析
-                            String sicks = (String) entry.getValue().get(4);
+                            String sicks = entity.getSicks();
                             if("男".equals(sex)){
+                                StringBuffer sb = new StringBuffer();
                                 if(entity.getSicks().contains("直肠炎")||entity.getSicks().contains("便秘")) {
-                                    entity.setResOnes("研究显示桔橘橙类水果、葱蒜类是结肠癌的保护因素，香蕉是结肠癌的危险因素；白菜类是直肠癌的保护因素，芋薯类是直肠癌的危险因素；膳食营养素中的钙是结直肠癌最重要的保护因素；既往肠息肉、血吸虫病史是结直肠癌的危险因素。鉴于您有直肠炎、便秘（偶尔便血），建议您去医疗机构详细检查，并积极治疗，同时在饮食结构上多食用桔橘橙类水果、葱蒜类、白菜类食物，减少香蕉、芋薯类食物摄入。");
-                                }else if(entity.getSicks().contains("胃病")){
-                                    entity.setResOnes("大量研究结果显示饮水来源、吸烟、经常吃腌制食品、有胃溃疡疾病史、近亲有胃癌疾病史及上消化道症状反复时间为胃癌发病的独立危险因素，提示暴露于以上环境因素、饮食习惯及遗传因素可能增加胃黏膜与致癌物质的接触机会，从而并削弱黏膜慢性炎症损伤修复的能力，继而导致慢性胃炎发展为胃癌。鉴于您有胃痛症状，建议您去医疗机构检查，并积极治疗，同时在环境因素及饮食习惯上需多注意，杜绝不良因素诱导，健康生活！");
-                                }else if(entity.getSicks().contains("肝硬化")
+                                    sb.append("研究显示桔橘橙类水果、葱蒜类是结肠癌的保护因素，香蕉是结肠癌的危险因素；白菜类是直肠癌的保护因素，芋薯类是直肠癌的危险因素；膳食营养素中的钙是结直肠癌最重要的保护因素；既往肠息肉、血吸虫病史是结直肠癌的危险因素。鉴于您有直肠炎、便秘（偶尔便血），建议您去医疗机构详细检查，并积极治疗，同时在饮食结构上多食用桔橘橙类水果、葱蒜类、白菜类食物，减少香蕉、芋薯类食物摄入。\n");
+                                }
+                                if(entity.getSicks().contains("胃病")){
+                                    sb.append("大量研究结果显示饮水来源、吸烟、经常吃腌制食品、有胃溃疡疾病史、近亲有胃癌疾病史及上消化道症状反复时间为胃癌发病的独立危险因素，提示暴露于以上环境因素、饮食习惯及遗传因素可能增加胃黏膜与致癌物质的接触机会，从而并削弱黏膜慢性炎症损伤修复的能力，继而导致慢性胃炎发展为胃癌。鉴于您有胃痛症状，建议您去医疗机构检查，并积极治疗，同时在环境因素及饮食习惯上需多注意，杜绝不良因素诱导，健康生活！\n");
+                                }
+                                if(entity.getSicks().contains("肝硬化")
                                         ||entity.getSicks().contains("肥胖")
                                         ||entity.getSicks().contains("糖尿病")
                                         ||entity.getSicks().contains("非酒精性脂肪肝")){
-                                    entity.setResOnes("大量证据表明，肝癌的发生是一个多阶段、多因素共同累积的结果，其发生过程是由体外致癌因素联合自身免疫缺陷、基因水平等一系列因素导致的。肝癌病因复杂，包括不可控因素及可控制因素，不可控因素包括性别、年龄、血型、宿主遗传、基因类型及基因突变等。饮酒与吸烟是肝癌发生的危险因素之一，另外还有健康状况方面代谢综合征如肝硬化、肥胖、糖尿病、非酒精性脂肪肝以及社会心理及精神因素肝癌发生的危险因素之一。");
-                                }else if(entity.getSicks().contains("肺炎")||entity.getSicks().contains("支气管")){
-                                    entity.setResOnes("研究证实，气管炎是并发肺癌的主要原因，减少气管炎患者的人数将大大减少肺癌的发病率。气管感染的患者促使肺脏内的炎症因子的释放，浸润并作用于肺内的细胞，分泌IL-1、IL-6等细胞因子及肿瘤的坏死因子及其他相关因子。这些因子将作用于肺脏细胞，引起细胞的反应，最后导致肺癌发生。鉴于您有气管炎，您首先积极治疗炎症，减轻肺脏的负担，同时一定不要抽烟，并远离二手烟接触，为您的健康保驾护航！");
-                                }else if(entity.getSicks().contains("吸烟")){
-                                    entity.setResOnes("您有长时间吸烟史，香烟中的尼古丁、亚硝胺等物质可导致基因甲基化而诱导癌症的发生。主动吸烟和被动吸烟分别作为肺癌、肝癌患病的危险因素已经被世界范围内大量的流行病学调查所证实，且被动吸烟者宫颈黏液中烟草相关致癌物质含量高于主动吸烟者。建议您远离吸烟场所，减少接触癌症诱发的因素。");
-                                }else if(entity.getSicks().contains("饮酒")){
-                                    entity.setResOnes("酒精被认为是可能诱发肝癌的危险因素。大量饮酒可促进肝癌发生。大数据分析结果表明，饮酒25 g·d-1及以上是肝癌的危险因素，并有随着每日饮酒量的增加，肝癌发病率增加的趋势。主要原因为：一方面，酒精可增加乳腺上皮细胞膜的通透性，通过乙醇诱导酶而增加致病因子的代谢，抑制DNA的损伤修复。您有饮酒习惯。建议您远离酒精，健康生活。");
-                                }else {
-                                    entity.setResOnes("");
+                                    sb.append("`大量证据表明，肝癌的发生是一个多阶段、多因素共同累积的结果，其发生过程是由体外致癌因素联合自身免疫缺陷、基因水平等一系列因素导致的。肝癌病因复杂，包括不可控因素及可控制因素，不可控因素包括性别、年龄、血型、宿主遗传、基因类型及基因突变等。饮酒与吸烟是肝癌发生的危险因素之一，另外还有健康状况方面代谢综合征如肝硬化、肥胖、糖尿病、非酒精性脂肪肝以及社会心理及精神因素肝癌发生的危险因素之一。\n    ");
                                 }
-
+                                if(entity.getSicks().contains("肺炎")||entity.getSicks().contains("支气管")){
+                                    sb.append("  研究证实，气管炎是并发肺癌的主要原因，减少气管炎患者的人数将大大减少肺癌的发病率。气管感染的患者促使肺脏内的炎症因子的释放，浸润并作用于肺内的细胞，分泌IL-1、IL-6等细胞因子及肿瘤的坏死因子及其他相关因子。这些因子将作用于肺脏细胞，引起细胞的反应，最后导致肺癌发生。鉴于您有气管炎，您首先积极治疗炎症，减轻肺脏的负担，同时一定不要抽烟，并远离二手烟接触，为您的健康保驾护航！\n    ");
+                                }
+                                if(entity.getSicks().contains("吸烟")){
+                                    sb.append("  您有长时间吸烟史，香烟中的尼古丁、亚硝胺等物质可导致基因甲基化而诱导癌症的发生。主动吸烟和被动吸烟分别作为肺癌、肝癌患病的危险因素已经被世界范围内大量的流行病学调查所证实，且被动吸烟者宫颈黏液中烟草相关致癌物质含量高于主动吸烟者。建议您远离吸烟场所，减少接触癌症诱发的因素。\n    ");
+                                }
+                                if(entity.getSicks().contains("饮酒")){
+                                    sb.append("酒精被认为是可能诱发肝癌的危险因素。大量饮酒可促进肝癌发生。大数据分析结果表明，饮酒25 g·d-1及以上是肝癌的危险因素，并有随着每日饮酒量的增加，肝癌发病率增加的趋势。主要原因为：一方面，酒精可增加乳腺上皮细胞膜的通透性，通过乙醇诱导酶而增加致病因子的代谢，抑制DNA的损伤修复。您有饮酒习惯。建议您远离酒精，健康生活。\n    ");
+                                }
+                                entity.setResOnes(sb.toString());
+                                StringBuffer sbtwo = new StringBuffer();
                                 if(entity.getSicks().contains("高血压")){
-                                    entity.setResTwos("研究表明高血压是诱发各种心脑血管疾病，尤其是脑卒中疾病的元凶。研究表明，血浆Hcy 水平在脑卒中患者中明显升高。根据中国心血管病人群监测( WHOMONICA 方案) 最新发表数据，我国脑卒中仍以每年8. 7%的速率增长，脑卒中发病率远远高于其他国家，居亚太地区第一名，较美国高出1 倍，男女性脑卒中发病率均高达27%，在脑卒中的多种可控因素中，高血压和HHcy 排在前两位，二者具有显著协同作用。研究表明，单独存在高血压或高同型半胱氨酸血症的患者，脑卒中死亡的风险分别为正常人群的3 倍和4 倍，当高血压同时合并Hcy 升高时，脑卒中发生风险增加明显。鉴于您血压偏高，建议您一定积极治疗，控制血压，预防并发症的发生。");
-                                }else if(entity.getSicks().contains("冠心病")||
-                                        entity.getSicks().contains("脑供血不足")||entity.getSicks().contains("动脉硬化")){
-                                    entity.setResTwos("您有心脑血管或相关疾病，建议您适当增加锻炼，健康饮食，舒心生活！");
-                                }else if(entity.getSicks().contains("糖尿病")){
-                                    entity.setResTwos("大量研究表明，糖尿病并发症有：糖尿病肾病、糖尿病眼病、糖尿病足病、糖尿病心血管病、糖尿病脑血管病等，鉴于您患有糖尿病，建议您密切关注以上疾病，同时积极治疗、控制血糖。");
-                                }else {
-                                    entity.setResTwos("");
+                                    sbtwo.append("研究表明高血压是诱发各种心脑血管疾病，尤其是脑卒中疾病的元凶。研究表明，血浆Hcy 水平在脑卒中患者中明显升高。根据中国心血管病人群监测( WHOMONICA 方案) 最新发表数据，我国脑卒中仍以每年8. 7%的速率增长，脑卒中发病率远远高于其他国家，居亚太地区第一名，较美国高出1 倍，男女性脑卒中发病率均高达27%，在脑卒中的多种可控因素中，高血压和HHcy 排在前两位，二者具有显著协同作用。研究表明，单独存在高血压或高同型半胱氨酸血症的患者，脑卒中死亡的风险分别为正常人群的3 倍和4 倍，当高血压同时合并Hcy 升高时，脑卒中发生风险增加明显。鉴于您血压偏高，建议您一定积极治疗，控制血压，预防并发症的发生。\n    ");
                                 }
+                                if(entity.getSicks().contains("冠心病")||
+                                        entity.getSicks().contains("脑供血不足")||entity.getSicks().contains("动脉硬化")){
+                                    sbtwo.append("您有心脑血管或相关疾病，建议您适当增加锻炼，健康饮食，舒心生活！\n    ");
+                                }
+                                if(entity.getSicks().contains("糖尿病")){
+                                    sbtwo.append("大量研究表明，糖尿病并发症有：糖尿病肾病、糖尿病眼病、糖尿病足病、糖尿病心血管病、糖尿病脑血管病等，鉴于您患有糖尿病，建议您密切关注以上疾病，同时积极治疗、控制血糖。\n    ");
+                                }
+                                entity.setResTwos(sbtwo.toString());
                             }else {  //女性健康分析
+                                StringBuffer sb1 = new StringBuffer();
                                 if(sicks.contains("直肠炎")||sicks.contains("便秘")){
-                                    entity.setResOnes("研究显示桔橘橙类水果、葱蒜类是结肠癌的保护因素，香蕉是结肠癌的危险因素；白菜类是直肠癌的保护因素，芋薯类是直肠癌的危险因素；膳食营养素中的钙是结直肠癌最重要的保护因素；既往肠息肉、血吸虫病史是结直肠癌的危险因素。鉴于您有直肠炎、便秘（偶尔便血），建议您去医疗机构详细检查，并积极治疗，同时在饮食结构上多食用桔橘橙类水果、葱蒜类、白菜类食物，减少香蕉、芋薯类食物摄入。");
-                                }else if(sicks.contains("胃病")){
-                                    entity.setResOnes("大量研究结果显示饮水来源、吸烟、经常吃腌制食品、有胃溃疡疾病史、近亲有胃癌疾病史及上消化道症状反复时间为胃癌发病的独立危险因素，提示暴露于以上环境因素、饮食习惯及遗传因素可能增加胃黏膜与致癌物质的接触机会，从而并削弱黏膜慢性炎症损伤修复的能力，继而导致慢性胃炎发展为胃癌。鉴于您有胃痛症状，建议您去医疗机构检查，并积极治疗，同时在环境因素及饮食习惯上需多注意，杜绝不良因素诱导，健康生活！");
-                                }else if(sicks.contains("肝硬化")
+                                    sb1.append("研究显示桔橘橙类水果、葱蒜类是结肠癌的保护因素，香蕉是结肠癌的危险因素；白菜类是直肠癌的保护因素，芋薯类是直肠癌的危险因素；膳食营养素中的钙是结直肠癌最重要的保护因素；既往肠息肉、血吸虫病史是结直肠癌的危险因素。鉴于您有直肠炎、便秘（偶尔便血），建议您去医疗机构详细检查，并积极治疗，同时在饮食结构上多食用桔橘橙类水果、葱蒜类、白菜类食物，减少香蕉、芋薯类食物摄入。\n    ");
+                                }
+                                if(sicks.contains("胃病")){
+                                    sb1.append("大量研究结果显示饮水来源、吸烟、经常吃腌制食品、有胃溃疡疾病史、近亲有胃癌疾病史及上消化道症状反复时间为胃癌发病的独立危险因素，提示暴露于以上环境因素、饮食习惯及遗传因素可能增加胃黏膜与致癌物质的接触机会，从而并削弱黏膜慢性炎症损伤修复的能力，继而导致慢性胃炎发展为胃癌。鉴于您有胃痛症状，建议您去医疗机构检查，并积极治疗，同时在环境因素及饮食习惯上需多注意，杜绝不良因素诱导，健康生活！\n    ");
+                                }
+                                if(sicks.contains("肝硬化")
                                         ||sicks.contains("肥胖")
                                         ||sicks.contains("糖尿病")
                                         ||sicks.contains("非酒精性脂肪肝")){
-                                    entity.setResOnes("大量证据表明，肝癌的发生是一个多阶段、多因素共同累积的结果，其发生过程是由体外致癌因素联合自身免疫缺陷、基因水平等一系列因素导致的。肝癌病因复杂，包括不可控因素及可控制因素，不可控因素包括性别、年龄、血型、宿主遗传、基因类型及基因突变等。饮酒与吸烟是肝癌发生的危险因素之一，另外还有健康状况方面代谢综合征如肝硬化、肥胖、糖尿病、非酒精性脂肪肝以及社会心理及精神因素肝癌发生的危险因素之一。");
-                                }else if(sicks.contains("肺炎")||sicks.contains("支气管")){
-                                    entity.setResOnes("研究证实，气管炎是并发肺癌的主要原因，减少气管炎患者的人数将大大减少肺癌的发病率。气管感染的患者促使肺脏内的炎症因子的释放，浸润并作用于肺内的细胞，分泌IL-1、IL-6等细胞因子及肿瘤的坏死因子及其他相关因子。这些因子将作用于肺脏细胞，引起细胞的反应，最后导致肺癌发生。鉴于您有气管炎，您首先积极治疗炎症，减轻肺脏的负担，同时一定不要抽烟，并远离二手烟接触，为您的健康保驾护航！");
-                                }else if(sicks.contains("吸烟")){
-                                    entity.setResOnes("您有长时间吸烟史，香烟中的尼古丁、亚硝胺等物质可导致基因甲基化而诱导癌症的发生。主动吸烟和被动吸烟分别作为肺癌、肝癌患病的危险因素已经被世界范围内大量的流行病学调查所证实，且被动吸烟者宫颈黏液中烟草相关致癌物质含量高于主动吸烟者。建议您远离吸烟场所，减少接触癌症诱发的因素。");
-                                }else if(sicks.contains("饮酒")){
-                                    entity.setResOnes("酒精被认为是可能诱发肝癌的危险因素。大量饮酒可促进肝癌发生。大数据分析结果表明，饮酒25 g·d-1及以上是肝癌的危险因素，并有随着每日饮酒量的增加，肝癌发病率增加的趋势。主要原因为：一方面，酒精可增加乳腺上皮细胞膜的通透性，通过乙醇诱导酶而增加致病因子的代谢，抑制DNA的损伤修复。您有饮酒习惯。建议您远离酒精，健康生活。");
-                                }else {
-                                    entity.setResOnes("");
+                                    sb1.append("大量证据表明，肝癌的发生是一个多阶段、多因素共同累积的结果，其发生过程是由体外致癌因素联合自身免疫缺陷、基因水平等一系列因素导致的。肝癌病因复杂，包括不可控因素及可控制因素，不可控因素包括性别、年龄、血型、宿主遗传、基因类型及基因突变等。饮酒与吸烟是肝癌发生的危险因素之一，另外还有健康状况方面代谢综合征如肝硬化、肥胖、糖尿病、非酒精性脂肪肝以及社会心理及精神因素肝癌发生的危险因素之一。\n    ");
                                 }
+                                if(sicks.contains("肺炎")||sicks.contains("支气管")){
+                                    sb1.append("研究证实，气管炎是并发肺癌的主要原因，减少气管炎患者的人数将大大减少肺癌的发病率。气管感染的患者促使肺脏内的炎症因子的释放，浸润并作用于肺内的细胞，分泌IL-1、IL-6等细胞因子及肿瘤的坏死因子及其他相关因子。这些因子将作用于肺脏细胞，引起细胞的反应，最后导致肺癌发生。鉴于您有气管炎，您首先积极治疗炎症，减轻肺脏的负担，同时一定不要抽烟，并远离二手烟接触，为您的健康保驾护航！\n    ");
+                                }
+                                if(sicks.contains("吸烟")){
+                                    sb1.append("您有长时间吸烟史，香烟中的尼古丁、亚硝胺等物质可导致基因甲基化而诱导癌症的发生。主动吸烟和被动吸烟分别作为肺癌、肝癌患病的危险因素已经被世界范围内大量的流行病学调查所证实，且被动吸烟者宫颈黏液中烟草相关致癌物质含量高于主动吸烟者。建议您远离吸烟场所，减少接触癌症诱发的因素。\n    ");
+                                }
+                                if(sicks.contains("饮酒")){
+                                    sb1.append("酒精被认为是可能诱发肝癌的危险因素。大量饮酒可促进肝癌发生。大数据分析结果表明，饮酒25 g·d-1及以上是肝癌的危险因素，并有随着每日饮酒量的增加，肝癌发病率增加的趋势。主要原因为：一方面，酒精可增加乳腺上皮细胞膜的通透性，通过乙醇诱导酶而增加致病因子的代谢，抑制DNA的损伤修复。您有饮酒习惯。建议您远离酒精，健康生活。\n    ");
+                                }
+                                entity.setResOnes(sb1.toString());
+                                StringBuffer sb2 = new StringBuffer();
                                 if(sicks.contains("高血压")){
-                                    entity.setResTwos("高血压是白内障的一个重要危险因素，长期罹患高血压，尤其是高收缩压状态能够促进白内障的发生和发展。体质指数（体质指数（BMI）=体重（kg）÷身高^2（m）。成人的BMI数值：过轻：低于18.5；正常：18.5-23.9；过重：24-27；肥胖：28-32；非常肥胖, 高于32）增高与白内障呈正相关，超重者患高血压发生白内障的危险性显著增高。因此应该倡导健康的生活方式，如参加更多的体力活动、合理膳食、减轻体质量、维持正常血压等，可有助于预防白内障的发生。鉴于您有高血压，建议您积极首先积极治疗高血压，同时合理膳食，保持正常体质指数，健康生活。");
+                                    sb2.append("高血压是白内障的一个重要危险因素，长期罹患高血压，尤其是高收缩压状态能够促进白内障的发生和发展。体质指数（体质指数（BMI）=体重（kg）÷身高^2（m）。成人的BMI数值：过轻：低于18.5；正常：18.5-23.9；过重：24-27；肥胖：28-32；非常肥胖, 高于32）增高与白内障呈正相关，超重者患高血压发生白内障的危险性显著增高。因此应该倡导健康的生活方式，如参加更多的体力活动、合理膳食、减轻体质量、维持正常血压等，可有助于预防白内障的发生。鉴于您有高血压，建议您积极首先积极治疗高血压，同时合理膳食，保持正常体质指数，健康生活。\n    ");
                                 }else if(sicks.contains("冠心病")
                                         ||sicks.contains("脑供血不足")
                                         ||sicks.contains("动脉硬化")){
-                                    entity.setResTwos("您有心脑血管或相关疾病，建议您适当增加锻炼，健康饮食，舒心生活！");
+                                    sb2.append("您有心脑血管或相关疾病，建议您适当增加锻炼，健康饮食，舒心生活！\n    ");
                                 }else if(sicks.contains("糖尿病")){
-                                    entity.setResTwos("大量研究表明，糖尿病并发症有：糖尿病肾病、糖尿病眼病、糖尿病足病、糖尿病心血管病、糖尿病脑血管病等，鉴于您患有糖尿病，建议您密切关注以上疾病，同时积极治疗、控制血糖。");
+                                    sb2.append("大量研究表明，糖尿病并发症有：糖尿病肾病、糖尿病眼病、糖尿病足病、糖尿病心血管病、糖尿病脑血管病等，鉴于您患有糖尿病，建议您密切关注以上疾病，同时积极治疗、控制血糖。\n      ");
                                 }
+                                entity.setResTwos(sb2.toString());
                             }
 
                             if(sicks.contains("高血压")&&!sicks.contains("糖尿病")){
@@ -636,8 +672,8 @@ public class CreateReportAction extends JFrame implements ActionListener{
             entity.setBreastLevel("正常");
             entity.setFemoralRisk("1.0000");
             entity.setFemoralLevel("正常");
-            entity.setInfaRisk("1.0000");
-            entity.setInfaLevel("正常");
+            entity.setLscheRisk("1.0000");
+            entity.setLscheLevel("正常");
             entity.setCataRisk("1.0000");
             entity.setCataLevel("正常");
         }else if("杂合突变".equals(apoeType)){
@@ -645,15 +681,15 @@ public class CreateReportAction extends JFrame implements ActionListener{
             entity.setBreastLevel("关注");
             entity.setFemoralRisk("1.6800");
             entity.setFemoralLevel("关注");
-            entity.setInfaRisk("1.8600");
-            entity.setInfaLevel("关注");
+            entity.setLscheRisk("1.8600");
+            entity.setLscheLevel("关注");
             entity.setCataRisk("1.6800");
             entity.setCataLevel("关注");
         }else if("纯合突变".equals(apoeType)){
             entity.setBreastRisk("2.0200");
             entity.setBreastLevel("特别关注");
-            entity.setFemoralRisk("1.8700");
-            entity.setFemoralLevel("关注");
+            entity.setLscheRisk("1.8700");
+            entity.setLscheLevel("关注");
             entity.setInfaRisk("2.0700");
             entity.setInfaLevel("特别关注");
             entity.setCataRisk("1.8700");

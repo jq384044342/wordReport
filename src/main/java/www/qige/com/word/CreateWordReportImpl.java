@@ -98,7 +98,7 @@ public class CreateWordReportImpl {
 
         XWPFTemplate template = XWPFTemplate.compile(template1).render(map);
         try {
-            FileOutputStream out = new FileOutputStream(entity.getFileName()+".docx");
+            FileOutputStream out = new FileOutputStream("report\\" + entity.getFileName()+".docx");
             template.write(out);
             out.flush();
             out.close();
