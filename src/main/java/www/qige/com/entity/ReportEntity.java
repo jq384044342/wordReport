@@ -52,6 +52,7 @@ public class ReportEntity implements Serializable {
     private String resTwos;
     private String helthManage;
     private String helthManageContent;
+    private String familySicks;
 
 
     public String getName() {
@@ -396,5 +397,13 @@ public class ReportEntity implements Serializable {
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
+    }
+
+    public String getFamilySicks() {
+        return familySicks;
+    }
+
+    public void setFamilySicks(String familySicks) {
+        this.familySicks = familySicks;
     }
 }

@@ -59,6 +59,7 @@ public class CreateWordReportImpl {
         map.put("resTwos",entity.getResTwos());
         map.put("helthManage",entity.getHelthManage());
         map.put("helthManageContent",entity.getHelthManageContent());
+        map.put("familySicks",entity.getFamilySicks());
         PictureData p53Pic = (PictureData) entity.getP53Pic1();
         PictureData apoePic = (PictureData) entity.getAopePic1();
 
@@ -98,7 +99,7 @@ public class CreateWordReportImpl {
 
         XWPFTemplate template = XWPFTemplate.compile(template1).render(map);
         try {
-            FileOutputStream out = new FileOutputStream("report\\" + entity.getFileName()+".docx");
+            FileOutputStream out = new FileOutputStream("report\\" + entity.getNum()+entity.getName()+".docx");
             template.write(out);
             out.flush();
             out.close();

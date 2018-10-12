@@ -80,19 +80,34 @@ public class ReadExcelUtils {
         row = sheet.getRow(0);
         int colNum = row.getPhysicalNumberOfCells();
         List<? extends PictureData> pictures = wb.getAllPictures();
+        File picTmpPath = new File("D:\\tmp\\") ;
+        for(int i=0;i<pictures.size();i++){
+            try {
+                FileOutputStream out = new FileOutputStream(
+                        "D:\\tmp\\"+String.valueOf(i)+".png");
+                out.write(pictures.get(i).getData());
+                out.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
 
     // 正文内容应该从第二行开始,第一行为表头的标题
-        for (int i = 1; i <= rowNum; i++) {
+        for (int i = 1,tmp=1; i <= rowNum; i++) {
             row = sheet.getRow(i);
             int j = 0;
+            if(((String) getCellFormatValue(row.getCell(5))).contains("无匹配结果")){
+                tmp += 1;
+                continue;
+            }
             Map<Integer,Object> cellValue = new HashMap<Integer, Object>();
             while (j < colNum) {
                 if(j!=7){
                     Object obj = getCellFormatValue(row.getCell(j));
                     cellValue.put(j, obj);
                 }else if(j == 7){
-                    cellValue.put(7, pictures.get(i-1));
+                    cellValue.put(7, pictures.get(i-tmp));
                 }
                 j++;
             }
