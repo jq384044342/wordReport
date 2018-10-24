@@ -1,6 +1,7 @@
 package www.qige.com.word;
 
 import com.deepoove.poi.XWPFTemplate;
+import com.deepoove.poi.data.DocxRenderData;
 import com.deepoove.poi.data.PictureRenderData;
 import org.apache.poi.ss.usermodel.PictureData;
 import org.apache.xmlbeans.impl.common.ConcurrentReaderHashMap;
@@ -57,8 +58,8 @@ public class CreateWordReportImpl {
         map.put("cataLevel",entity.getCataLevel());
         map.put("resOnes",entity.getResOnes());
         map.put("resTwos",entity.getResTwos());
-        map.put("helthManage",entity.getHelthManage());
-        map.put("helthManageContent",entity.getHelthManageContent());
+//        map.put("helthManage",entity.getHelthManage());
+        map.put("helthManageContent",new DocxRenderData(new File("template\\"+entity.getHelthManageContent())));
         map.put("familySicks",entity.getFamilySicks());
         PictureData p53Pic = (PictureData) entity.getP53Pic1();
         PictureData apoePic = (PictureData) entity.getAopePic1();
