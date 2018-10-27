@@ -13,6 +13,7 @@ public class ReportEntity implements Serializable {
     private String fileName;
     private String num;
     private String sex;
+    private String age;
     private String sicks;
     private String p53Res;
     private String p53Type;
@@ -54,7 +55,13 @@ public class ReportEntity implements Serializable {
     private String helthManageContent;
     private String familySicks;
 
+    public String getAge() {
+        return age;
+    }
 
+    public void setAge(String age) {
+        this.age = age;
+    }
     public String getName() {
         return name;
     }
