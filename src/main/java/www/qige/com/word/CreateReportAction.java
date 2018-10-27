@@ -741,7 +741,7 @@ public class CreateReportAction extends JFrame implements ActionListener {
         level = getRiskLevel(sum, level);
         DecimalFormat dFormat = new DecimalFormat("#.0000");
         entity.setLiverRisk(dFormat.format(sum));
-        entity.setLiverRisk(level);
+        entity.setLiverLevel(level);
     }
 
     private void setLungRiskAndLevelWomen(String p53Type, String apoeType, ReportEntity entity) {
@@ -1230,7 +1230,7 @@ public class CreateReportAction extends JFrame implements ActionListener {
         level = getRiskLevel(sum, level);
         DecimalFormat dFormat = new DecimalFormat("#.0000");
         entity.setLiverRisk(dFormat.format(sum));
-        entity.setLiverRisk(level);
+        entity.setLiverLevel(level);
     }
 
     private void setLungRiskAndLevel(String p53Type, String apoeType, ReportEntity entity) {
@@ -1286,6 +1286,9 @@ public class CreateReportAction extends JFrame implements ActionListener {
 
     private double getAgeRisk(ReportEntity entity, String type) {
         String age = entity.getAge();
+        if(Integer.parseInt(age)<20){
+            return 0;
+        }
         if ("男".equals(entity.getSex())) {
             if ("肺癌".equals(type)) {
                 return Double.parseDouble((String) config.get(2).get(Integer.parseInt(age)));
