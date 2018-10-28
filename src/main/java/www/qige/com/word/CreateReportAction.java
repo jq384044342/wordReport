@@ -70,8 +70,8 @@ public class CreateReportAction extends JFrame implements ActionListener {
         this.setVisible(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         try {
-            config = new ReadConfigExcelUtils("template\\config.xlsx").readExcelContent();
-//            config = new ReadConfigExcelUtils("D:\\ideaWork\\out\\artifacts\\worReport_jar\\template\\config.xlsx").readExcelContent();
+//            config = new ReadConfigExcelUtils("template\\config.xlsx").readExcelContent();
+            config = new ReadConfigExcelUtils("D:\\ideaWork\\out\\artifacts\\worReport_jar\\template\\config.xlsx").readExcelContent();
         } catch (Exception e) {
             System.out.println("加载配置文件出错");
             e.printStackTrace();
@@ -142,24 +142,20 @@ public class CreateReportAction extends JFrame implements ActionListener {
                             StringBuffer sbSicks = new StringBuffer();
                             for (int i = 5; i <= 34; i++) {
                                 if (StringUtils.isNoneEmpty((String) entry.getValue().get(i))) {
-                                    sbSicks.append((String) entry.getValue().get(i));
+                                    sbSicks.append((String) entry.getValue().get(i)+"、");
                                 }
                             }
                             String thesicks = sbSicks.toString();
-                            if (thesicks.endsWith("、")) {
-                                thesicks = thesicks.substring(0, thesicks.length() - 1);
-                            }
+
                             entity.setSicks(thesicks);
                             StringBuffer setFamilySicks = new StringBuffer();
                             for (int j = 35; j <= 54; j++) {
                                 if (StringUtils.isNoneEmpty((String) entry.getValue().get(j))) {
-                                    setFamilySicks.append((String) entry.getValue().get(j));
+                                    setFamilySicks.append((String) entry.getValue().get(j)+"、");
                                 }
                             }
                             String familySicks = setFamilySicks.toString();
-                            if (thesicks.endsWith("、")) {
-                                familySicks = familySicks.substring(0, thesicks.length() - 1);
-                            }
+
                             entity.setFamilySicks(familySicks);
                             String p53Res = "";
                             String p53Type = "";
@@ -196,12 +192,20 @@ public class CreateReportAction extends JFrame implements ActionListener {
                             } else {
                                 setRiskAndLevelWomen(p53Type, apoeType, entity);
                             }
+                            if (thesicks.endsWith("、")) {
+                                thesicks = thesicks.substring(0, thesicks.length() - 1);
+                            }
+                            entity.setSicks(thesicks);
+                            if (familySicks.endsWith("、")) {
+                                familySicks = familySicks.substring(0, thesicks.length() - 1);
+                            }
+                            entity.setFamilySicks(familySicks);
                             //结果分析
                             String sicks = entity.getSicks();
                             if ("男".equals(sex)) {
                                 StringBuffer sb = new StringBuffer();
                                 if (entity.getSicks().contains("直肠炎") || entity.getSicks().contains("便秘") || entity.getSicks().contains("肠病")) {
-                                    sb.append("研究显示桔橘橙类水果、葱蒜类是结肠癌的保护因素，香蕉是结肠癌的危险因素；白菜类是直肠癌的保护因素，芋薯类是直肠癌的危险因素；膳食营养素中的钙是结直肠癌最重要的保护因素；既往肠息肉、血吸虫病史是结直肠癌的危险因素。建议您去医疗机构详细检查，并积极治疗，同时在饮食结构上多食用桔橘橙类水果、葱蒜类、白菜类食物，减少香蕉、芋薯类食物摄入。\n");
+                                    sb.append("随着人类对结直肠癌认识的深入和流行病学的发展, 发现结直肠癌是多因素作用、多基因参与、多阶段发展的疾病。流行病学研究表明，结直肠癌的发生是多因素参与、多步骤的复杂病理过程, 是生活饮食因素、宿主基因和环境因素等相互作用的结果。许多专家一致认为, 环境因素可能成为防治结直肠癌发生的重大科学问题。因此建议您摒弃不良生活饮食习惯，同时在饮食结构上多食用桔橘橙类水果、葱蒜类、白菜类食物，减少香蕉、芋薯类食物摄入。\n");
                                 }
                                 if (entity.getSicks().contains("胃病")) {
                                     sb.append("大量研究结果显示饮水来源、吸烟、经常吃腌制食品、有胃溃疡疾病史、近亲有胃癌疾病史及上消化道症状反复时间为胃癌发病的独立危险因素，提示暴露于以上环境因素、饮食习惯及遗传因素可能增加胃黏膜与致癌物质的接触机会，从而并削弱黏膜慢性炎症损伤修复的能力，继而导致慢性胃炎发展为胃癌。建议您去医疗机构检查，并积极治疗，同时在环境因素及饮食习惯上需多注意，杜绝不良因素诱导，健康生活！\n");
@@ -251,7 +255,7 @@ public class CreateReportAction extends JFrame implements ActionListener {
                             } else {  //女性健康分析
                                 StringBuffer sb1 = new StringBuffer();
                                 if (sicks.contains("直肠炎") || sicks.contains("便秘") || sicks.contains("肠病")) {
-                                    sb1.append("研究显示桔橘橙类水果、葱蒜类是结肠癌的保护因素，香蕉是结肠癌的危险因素；白菜类是直肠癌的保护因素，芋薯类是直肠癌的危险因素；膳食营养素中的钙是结直肠癌最重要的保护因素；既往肠息肉、血吸虫病史是结直肠癌的危险因素。建议您去医疗机构详细检查，并积极治疗，同时在饮食结构上多食用桔橘橙类水果、葱蒜类、白菜类食物，减少香蕉、芋薯类食物摄入。\n    ");
+                                    sb1.append("随着人类对结直肠癌认识的深入和流行病学的发展, 发现结直肠癌是多因素作用、多基因参与、多阶段发展的疾病。流行病学研究表明，结直肠癌的发生是多因素参与、多步骤的复杂病理过程, 是生活饮食因素、宿主基因和环境因素等相互作用的结果。许多专家一致认为, 环境因素可能成为防治结直肠癌发生的重大科学问题。因此建议您摒弃不良生活饮食习惯，同时在饮食结构上多食用桔橘橙类水果、葱蒜类、白菜类食物，减少香蕉、芋薯类食物摄入。\n    ");
                                 }
                                 if (sicks.contains("胃病")) {
                                     sb1.append("大量研究结果显示饮水来源、吸烟、经常吃腌制食品、有胃溃疡疾病史、近亲有胃癌疾病史及上消化道症状反复时间为胃癌发病的独立危险因素，提示暴露于以上环境因素、饮食习惯及遗传因素可能增加胃黏膜与致癌物质的接触机会，从而并削弱黏膜慢性炎症损伤修复的能力，继而导致慢性胃炎发展为胃癌。建议您去医疗机构检查，并积极治疗，同时在环境因素及饮食习惯上需多注意，杜绝不良因素诱导，健康生活！\n    ");
@@ -353,43 +357,43 @@ public class CreateReportAction extends JFrame implements ActionListener {
         } else if ("纯合突变".equals(p53Type)) {
             sum = Double.parseDouble((String) config.get(36).get(6));
         }
-        if (sicks.contains("吸烟")) {
+        if (sicks.contains("吸烟、")) {
             sum += Double.parseDouble((String) config.get(36).get(7));
         }
-        if (sicks.contains("饮酒")) {
+        if (sicks.contains("饮酒、")) {
             sum += Double.parseDouble((String) config.get(36).get(8));
         }
-        if (sicks.contains("脑供血不足")) {
+        if (sicks.contains("脑供血不足、")) {
             sum += Double.parseDouble((String) config.get(36).get(9));
         }
-        if (sicks.contains("白内障")) {
+        if (sicks.contains("白内障、")) {
             sum += Double.parseDouble((String) config.get(36).get(10));
         }
-        if (sicks.contains("高血压")) {
+        if (sicks.contains("高血压、")) {
             sum += Double.parseDouble((String) config.get(36).get(11));
         }
-        if (sicks.contains("糖尿病")) {
+        if (sicks.contains("糖尿病、")) {
             sum += Double.parseDouble((String) config.get(36).get(12));
         }
-        if (sicks.contains("高血脂")) {
+        if (sicks.contains("高血脂、")) {
             sum += Double.parseDouble((String) config.get(36).get(13));
         }
-        if (sicks.contains("冠心病")) {
+        if (sicks.contains("冠心病、")) {
             sum += Double.parseDouble((String) config.get(36).get(14));
         }
-        if (sicks.contains("肥胖")) {
+        if (sicks.contains("肥胖、")) {
             sum += Double.parseDouble((String) config.get(36).get(15));
         }
-        if (sicks.contains("糖尿病家族病史")) {
+        if (sicks.contains("糖尿病家族病史、")) {
             sum += Double.parseDouble((String) config.get(36).get(16));
         }
-        if (sicks.contains("便秘史")) {
+        if (sicks.contains("便秘史、")) {
             sum += Double.parseDouble((String) config.get(36).get(17));
         }
-        if (sicks.contains("血便史")) {
+        if (sicks.contains("血便史、")) {
             sum += Double.parseDouble((String) config.get(36).get(17));
         }
-        if (sicks.contains("恶性肿瘤家族史")) {
+        if (sicks.contains("恶性肿瘤家族史、")) {
             sum += Double.parseDouble((String) config.get(36).get(17));
         }
         sum += getAgeRisk(entity, "白内障");
@@ -411,37 +415,37 @@ public class CreateReportAction extends JFrame implements ActionListener {
         } else if ("纯合突变".equals(p53Type)) {
             sum = Double.parseDouble((String) config.get(34).get(6));
         }
-        if (sicks.contains("吸烟")) {
+        if (sicks.contains("吸烟、")) {
             sum += Double.parseDouble((String) config.get(34).get(7));
         }
-        if (sicks.contains("饮酒")) {
+        if (sicks.contains("饮酒、")) {
             sum += Double.parseDouble((String) config.get(34).get(8));
         }
-        if (sicks.contains("脑供血不足")) {
+        if (sicks.contains("脑供血不足、")) {
             sum += Double.parseDouble((String) config.get(34).get(9));
         }
-        if (sicks.contains("重体力活")) {
+        if (sicks.contains("重体力活、")) {
             sum += Double.parseDouble((String) config.get(34).get(10));
         }
-        if (sicks.contains("高血压")) {
+        if (sicks.contains("高血压、")) {
             sum += Double.parseDouble((String) config.get(34).get(11));
         }
-        if (sicks.contains("糖尿病")) {
+        if (sicks.contains("糖尿病、")) {
             sum += Double.parseDouble((String) config.get(34).get(12));
         }
-        if (sicks.contains("高血脂")) {
+        if (sicks.contains("高血脂、")) {
             sum += Double.parseDouble((String) config.get(34).get(13));
         }
-        if (sicks.contains("冠心病")) {
+        if (sicks.contains("冠心病、")) {
             sum += Double.parseDouble((String) config.get(34).get(14));
         }
-        if (sicks.contains("肥胖")) {
+        if (sicks.contains("肥胖、")) {
             sum += Double.parseDouble((String) config.get(34).get(15));
         }
-        if (sicks.contains("嗜盐")) {
+        if (sicks.contains("嗜盐、")) {
             sum += Double.parseDouble((String) config.get(34).get(16));
         }
-        if (sicks.contains("高尿酸症")) {
+        if (sicks.contains("高尿酸症、")) {
             sum += Double.parseDouble((String) config.get(34).get(17));
         }
         sum += getAgeRisk(entity, "缺血性脑卒中");
@@ -462,22 +466,22 @@ public class CreateReportAction extends JFrame implements ActionListener {
         } else if ("纯合突变".equals(p53Type)) {
             sum = Double.parseDouble((String) config.get(32).get(6));
         }
-        if (sicks.contains("吸烟")) {
+        if (sicks.contains("吸烟、")) {
             sum += Double.parseDouble((String) config.get(32).get(7));
         }
-        if (sicks.contains("饮酒")) {
+        if (sicks.contains("饮酒、")) {
             sum += Double.parseDouble((String) config.get(32).get(8));
         }
-        if (sicks.contains("风湿骨病")) {
+        if (sicks.contains("风湿骨病、")) {
             sum += Double.parseDouble((String) config.get(32).get(9));
         }
-        if (sicks.contains("股骨头坏死")) {
+        if (sicks.contains("股骨头坏死、")) {
             sum += Double.parseDouble((String) config.get(32).get(10));
         }
-        if (sicks.contains("高血压")) {
+        if (sicks.contains("高血压、")) {
             sum += Double.parseDouble((String) config.get(32).get(11));
         }
-        if (sicks.contains("糖尿病")) {
+        if (sicks.contains("糖尿病、")) {
             sum += Double.parseDouble((String) config.get(32).get(12));
         }
 
@@ -500,31 +504,31 @@ public class CreateReportAction extends JFrame implements ActionListener {
         } else if ("纯合突变".equals(p53Type)) {
             sum = Double.parseDouble((String) config.get(30).get(6));
         }
-        if (sicks.contains("吸烟")) {
+        if (sicks.contains("吸烟、")) {
             sum += Double.parseDouble((String) config.get(30).get(7));
         }
-        if (sicks.contains("饮酒")) {
+        if (sicks.contains("饮酒、")) {
             sum += Double.parseDouble((String) config.get(30).get(8));
         }
-        if (sicks.contains("恶性肿瘤家族史")) {
+        if (sicks.contains("恶性肿瘤家族史、")) {
             sum += Double.parseDouble((String) config.get(30).get(9));
         }
-        if (sicks.contains("乳腺癌家族史")) {
+        if (sicks.contains("乳腺癌家族史、")) {
             sum += Double.parseDouble((String) config.get(30).get(10));
         }
-        if (sicks.contains("乳腺癌")) {
+        if (sicks.contains("乳腺癌、")) {
             sum += Double.parseDouble((String) config.get(30).get(11));
         }
-        if (sicks.contains("乳腺增生")) {
+        if (sicks.contains("乳腺增生、")) {
             sum += Double.parseDouble((String) config.get(30).get(12));
         }
-        if (sicks.contains("饮茶")) {
+        if (sicks.contains("饮茶、")) {
             sum += Double.parseDouble((String) config.get(30).get(13));
         }
-        if (sicks.contains("喜红肉")) {
+        if (sicks.contains("喜红肉、")) {
             sum += Double.parseDouble((String) config.get(30).get(14));
         }
-        if (sicks.contains("喜脂肪")) {
+        if (sicks.contains("喜脂肪、")) {
             sum += Double.parseDouble((String) config.get(30).get(15));
         }
         sum += getAgeRisk(entity, "乳腺癌");
@@ -545,31 +549,31 @@ public class CreateReportAction extends JFrame implements ActionListener {
         } else if ("纯合突变".equals(p53Type)) {
             sum = Double.parseDouble((String) config.get(28).get(6));
         }
-        if (sicks.contains("吸烟")) {
+        if (sicks.contains("吸烟、")) {
             sum += Double.parseDouble((String) config.get(28).get(7));
         }
-        if (sicks.contains("饮酒")) {
+        if (sicks.contains("饮酒、")) {
             sum += Double.parseDouble((String) config.get(28).get(8));
         }
-        if (sicks.contains("恶性肿瘤家族史")) {
+        if (sicks.contains("恶性肿瘤家族史、")) {
             sum += Double.parseDouble((String) config.get(6).get(9));
         }
-        if (sicks.contains("子宫内膜癌家族史")) {
+        if (sicks.contains("子宫内膜癌家族史、")) {
             sum += Double.parseDouble((String) config.get(28).get(10));
         }
-        if (sicks.contains("高血压")) {
+        if (sicks.contains("高血压、")) {
             sum += Double.parseDouble((String) config.get(28).get(11));
         }
-        if (sicks.contains("糖尿病")) {
+        if (sicks.contains("糖尿病、")) {
             sum += Double.parseDouble((String) config.get(28).get(12));
         }
-        if (sicks.contains("子宫内膜癌")) {
+        if (sicks.contains("子宫内膜癌、")) {
             sum += Double.parseDouble((String) config.get(28).get(13));
         }
-        if (sicks.contains("喜红肉")) {
+        if (sicks.contains("喜红肉、")) {
             sum += Double.parseDouble((String) config.get(28).get(14));
         }
-        if (sicks.contains("喜脂肪")) {
+        if (sicks.contains("喜脂肪、")) {
             sum += Double.parseDouble((String) config.get(28).get(15));
         }
         sum += getAgeRisk(entity, "子宫内膜癌");
@@ -590,34 +594,34 @@ public class CreateReportAction extends JFrame implements ActionListener {
         } else if ("纯合突变".equals(p53Type)) {
             sum = Double.parseDouble((String) config.get(26).get(6));
         }
-        if (sicks.contains("吸烟")) {
+        if (sicks.contains("吸烟、")) {
             sum += Double.parseDouble((String) config.get(26).get(7));
         }
-        if (sicks.contains("饮酒")) {
+        if (sicks.contains("饮酒、")) {
             sum += Double.parseDouble((String) config.get(26).get(8));
         }
-        if (sicks.contains("恶性肿瘤家族史")) {
+        if (sicks.contains("恶性肿瘤家族史、")) {
             sum += Double.parseDouble((String) config.get(26).get(9));
         }
-        if (sicks.contains("卵巢癌家族史")) {
+        if (sicks.contains("卵巢癌家族史、")) {
             sum += Double.parseDouble((String) config.get(26).get(10));
         }
-        if (sicks.contains("高血压")) {
+        if (sicks.contains("高血压、")) {
             sum += Double.parseDouble((String) config.get(26).get(11));
         }
-        if (sicks.contains("糖尿病")) {
+        if (sicks.contains("糖尿病、")) {
             sum += Double.parseDouble((String) config.get(26).get(12));
         }
-        if (sicks.contains("结直肠癌")) {
+        if (sicks.contains("结直肠癌、")) {
             sum += Double.parseDouble((String) config.get(26).get(13));
         }
-        if (sicks.contains("卵巢癌")) {
+        if (sicks.contains("卵巢癌、")) {
             sum += Double.parseDouble((String) config.get(26).get(14));
         }
-        if (sicks.contains("喜红肉")) {
+        if (sicks.contains("喜红肉、")) {
             sum += Double.parseDouble((String) config.get(26).get(15));
         }
-        if (sicks.contains("喜脂肪")) {
+        if (sicks.contains("喜脂肪、")) {
             sum += Double.parseDouble((String) config.get(26).get(16));
         }
         sum += getAgeRisk(entity, "卵巢癌");
@@ -639,43 +643,43 @@ public class CreateReportAction extends JFrame implements ActionListener {
         } else if ("纯合突变".equals(p53Type)) {
             sum = Double.parseDouble((String) config.get(24).get(6));
         }
-        if (sicks.contains("吸烟")) {
+        if (sicks.contains("吸烟、")) {
             sum += Double.parseDouble((String) config.get(24).get(7));
         }
-        if (sicks.contains("饮酒")) {
+        if (sicks.contains("饮酒、")) {
             sum += Double.parseDouble((String) config.get(24).get(8));
         }
-        if (sicks.contains("消化道溃疡")) {
+        if (sicks.contains("消化道溃疡、")) {
             sum += Double.parseDouble((String) config.get(24).get(9));
         }
-        if (sicks.contains("直结肠炎")) {
+        if (sicks.contains("直结肠炎、")) {
             sum += Double.parseDouble((String) config.get(24).get(10));
         }
-        if (sicks.contains("高血压")) {
+        if (sicks.contains("高血压、")) {
             sum += Double.parseDouble((String) config.get(24).get(11));
         }
-        if (sicks.contains("糖尿病")) {
+        if (sicks.contains("糖尿病、")) {
             sum += Double.parseDouble((String) config.get(24).get(12));
         }
-        if (sicks.contains("结直肠癌")) {
+        if (sicks.contains("结直肠癌、")) {
             sum += Double.parseDouble((String) config.get(24).get(13));
         }
-        if (sicks.contains("肠息肉史")) {
+        if (sicks.contains("肠息肉史、")) {
             sum += Double.parseDouble((String) config.get(24).get(14));
         }
-        if (sicks.contains("喜腌制食物")) {
+        if (sicks.contains("喜腌制食物、")) {
             sum += Double.parseDouble((String) config.get(24).get(15));
         }
-        if (sicks.contains("嗜盐")) {
+        if (sicks.contains("嗜盐、")) {
             sum += Double.parseDouble((String) config.get(24).get(16));
         }
-        if (sicks.contains("便秘史")) {
+        if (sicks.contains("便秘史、")) {
             sum += Double.parseDouble((String) config.get(24).get(17));
         }
-        if (sicks.contains("血便史")) {
+        if (sicks.contains("血便史、")) {
             sum += Double.parseDouble((String) config.get(24).get(18));
         }
-        if (sicks.contains("恶性肿瘤家族史")) {
+        if (sicks.contains("恶性肿瘤家族史、")) {
             sum += Double.parseDouble((String) config.get(24).get(19));
         }
         sum += getAgeRisk(entity, "结直肠癌");
@@ -697,43 +701,43 @@ public class CreateReportAction extends JFrame implements ActionListener {
         } else if ("纯合突变".equals(p53Type)) {
             sum = Double.parseDouble((String) config.get(22).get(6));
         }
-        if (sicks.contains("吸烟")) {
+        if (sicks.contains("吸烟、")) {
             sum += Double.parseDouble((String) config.get(22).get(7));
         }
-        if (sicks.contains("饮酒")) {
+        if (sicks.contains("饮酒、")) {
             sum += Double.parseDouble((String) config.get(22).get(8));
         }
-        if (sicks.contains("喜鱼生类食物")) {
+        if (sicks.contains("喜鱼生类食物、")) {
             sum += Double.parseDouble((String) config.get(22).get(9));
         }
-        if (sicks.contains("乙型肝炎病毒慢性感染")) {
+        if (sicks.contains("乙型肝炎病毒慢性感染、")) {
             sum += Double.parseDouble((String) config.get(22).get(10));
         }
-        if (sicks.contains("高血压")) {
+        if (sicks.contains("高血压、")) {
             sum += Double.parseDouble((String) config.get(22).get(11));
         }
-        if (sicks.contains("糖尿病")) {
+        if (sicks.contains("糖尿病、")) {
             sum += Double.parseDouble((String) config.get(22).get(12));
         }
-        if (sicks.contains("肝癌")) {
+        if (sicks.contains("肝癌、")) {
             sum += Double.parseDouble((String) config.get(22).get(13));
         }
-        if (sicks.contains("肝癌家族史")) {
+        if (sicks.contains("肝癌家族史、")) {
             sum += Double.parseDouble((String) config.get(22).get(14));
         }
-        if (sicks.contains("肝硬化")) {
+        if (sicks.contains("肝硬化、")) {
             sum += Double.parseDouble((String) config.get(22).get(15));
         }
-        if (sicks.contains("脂肪肝")) {
+        if (sicks.contains("脂肪肝、")) {
             sum += Double.parseDouble((String) config.get(22).get(16));
         }
-        if (sicks.contains("肝炎")) {
+        if (sicks.contains("肝炎、")) {
             sum += Double.parseDouble((String) config.get(22).get(17));
         }
-        if (sicks.contains("喜腌制食物")) {
+        if (sicks.contains("喜腌制食物、")) {
             sum += Double.parseDouble((String) config.get(22).get(18));
         }
-        if (sicks.contains("肝病")) {
+        if (sicks.contains("肝病、")) {
             sum += Double.parseDouble((String) config.get(22).get(19));
         }
         sum += getAgeRisk(entity, "肝癌");
@@ -754,37 +758,37 @@ public class CreateReportAction extends JFrame implements ActionListener {
         } else if ("纯合突变".equals(p53Type)) {
             sum = Double.parseDouble((String) config.get(20).get(6));
         }
-        if (sicks.contains("吸烟")) {
+        if (sicks.contains("吸烟、")) {
             sum += Double.parseDouble((String) config.get(20).get(7));
         }
-        if (sicks.contains("饮酒")) {
+        if (sicks.contains("饮酒、")) {
             sum += Double.parseDouble((String) config.get(20).get(8));
         }
-        if (sicks.contains("肺结核")) {
+        if (sicks.contains("肺结核、")) {
             sum += Double.parseDouble((String) config.get(20).get(9));
         }
-        if (sicks.contains("情绪不好")) {
+        if (sicks.contains("情绪不好、")) {
             sum += Double.parseDouble((String) config.get(20).get(10));
         }
-        if (sicks.contains("高血压")) {
+        if (sicks.contains("高血压、")) {
             sum += Double.parseDouble((String) config.get(20).get(11));
         }
-        if (sicks.contains("糖尿病")) {
+        if (sicks.contains("糖尿病、")) {
             sum += Double.parseDouble((String) config.get(20).get(12));
         }
-        if (sicks.contains("肺癌")) {
+        if (sicks.contains("肺癌、")) {
             sum += Double.parseDouble((String) config.get(20).get(13));
         }
-        if (sicks.contains("肺癌家族史")) {
+        if (sicks.contains("肺癌家族史、")) {
             sum += Double.parseDouble((String) config.get(20).get(14));
         }
-        if (sicks.contains("支气管炎")) {
+        if (sicks.contains("支气管炎、")) {
             sum += Double.parseDouble((String) config.get(20).get(15));
         }
-        if (sicks.contains("肺炎")) {
+        if (sicks.contains("肺炎、")) {
             sum += Double.parseDouble((String) config.get(20).get(16));
         }
-        if (sicks.contains("肺病")) {
+        if (sicks.contains("肺病、")) {
             sum += Double.parseDouble((String) config.get(20).get(17));
         }
 
@@ -819,37 +823,37 @@ public class CreateReportAction extends JFrame implements ActionListener {
         } else if ("纯合突变".equals(p53Type)) {
             sum = Double.parseDouble((String) config.get(18).get(6));
         }
-        if (sicks.contains("吸烟")) {
+        if (sicks.contains("吸烟、")) {
             sum += Double.parseDouble((String) config.get(18).get(7));
         }
-        if (sicks.contains("饮酒")) {
+        if (sicks.contains("饮酒、")) {
             sum += Double.parseDouble((String) config.get(18).get(8));
         }
-        if (sicks.contains("脑梗")) {
+        if (sicks.contains("脑梗、")) {
             sum += Double.parseDouble((String) config.get(18).get(9));
         }
-        if (sicks.contains("心梗")) {
+        if (sicks.contains("心梗、")) {
             sum += Double.parseDouble((String) config.get(18).get(10));
         }
-        if (sicks.contains("高血压")) {
+        if (sicks.contains("高血压、")) {
             sum += Double.parseDouble((String) config.get(18).get(11));
         }
-        if (sicks.contains("糖尿病")) {
+        if (sicks.contains("糖尿病、")) {
             sum += Double.parseDouble((String) config.get(18).get(12));
         }
-        if (sicks.contains("高血脂")) {
+        if (sicks.contains("高血脂、")) {
             sum += Double.parseDouble((String) config.get(18).get(13));
         }
-        if (sicks.contains("冠心病")) {
+        if (sicks.contains("冠心病、")) {
             sum += Double.parseDouble((String) config.get(18).get(14));
         }
-        if (sicks.contains("肥胖")) {
+        if (sicks.contains("肥胖、")) {
             sum += Double.parseDouble((String) config.get(18).get(15));
         }
-        if (sicks.contains("脑供血不足")) {
+        if (sicks.contains("脑供血不足、")) {
             sum += Double.parseDouble((String) config.get(18).get(16));
         }
-        if (sicks.contains("冠心病家族史")) {
+        if (sicks.contains("冠心病家族史、")) {
             sum += Double.parseDouble((String) config.get(18).get(17));
         }
 
@@ -871,37 +875,37 @@ public class CreateReportAction extends JFrame implements ActionListener {
         } else if ("纯合突变".equals(p53Type)) {
             sum = Double.parseDouble((String) config.get(16).get(6));
         }
-        if (sicks.contains("吸烟")) {
+        if (sicks.contains("吸烟、")) {
             sum += Double.parseDouble((String) config.get(16).get(7));
         }
-        if (sicks.contains("饮酒")) {
+        if (sicks.contains("饮酒、")) {
             sum += Double.parseDouble((String) config.get(16).get(8));
         }
-        if (sicks.contains("脑梗")) {
+        if (sicks.contains("脑梗、")) {
             sum += Double.parseDouble((String) config.get(16).get(9));
         }
-        if (sicks.contains("心梗")) {
+        if (sicks.contains("心梗、")) {
             sum += Double.parseDouble((String) config.get(16).get(10));
         }
-        if (sicks.contains("高血压")) {
+        if (sicks.contains("高血压、")) {
             sum += Double.parseDouble((String) config.get(16).get(11));
         }
-        if (sicks.contains("糖尿病")) {
+        if (sicks.contains("糖尿病、")) {
             sum += Double.parseDouble((String) config.get(16).get(12));
         }
-        if (sicks.contains("高血脂")) {
+        if (sicks.contains("高血脂、")) {
             sum += Double.parseDouble((String) config.get(16).get(13));
         }
-        if (sicks.contains("冠心病")) {
+        if (sicks.contains("冠心病、")) {
             sum += Double.parseDouble((String) config.get(16).get(14));
         }
-        if (sicks.contains("肥胖")) {
+        if (sicks.contains("肥胖、")) {
             sum += Double.parseDouble((String) config.get(16).get(15));
         }
-        if (sicks.contains("脑供血不足")) {
+        if (sicks.contains("脑供血不足、")) {
             sum += Double.parseDouble((String) config.get(16).get(16));
         }
-        if (sicks.contains("嗜油")) {
+        if (sicks.contains("嗜油、")) {
             sum += Double.parseDouble((String) config.get(16).get(17));
         }
 
@@ -923,37 +927,37 @@ public class CreateReportAction extends JFrame implements ActionListener {
         } else if ("纯合突变".equals(p53Type)) {
             sum = Double.parseDouble((String) config.get(14).get(6));
         }
-        if (sicks.contains("吸烟")) {
+        if (sicks.contains("吸烟、")) {
             sum += Double.parseDouble((String) config.get(14).get(7));
         }
-        if (sicks.contains("饮酒")) {
+        if (sicks.contains("饮酒、")) {
             sum += Double.parseDouble((String) config.get(14).get(8));
         }
-        if (sicks.contains("脑供血不足")) {
+        if (sicks.contains("脑供血不足、")) {
             sum += Double.parseDouble((String) config.get(14).get(9));
         }
-        if (sicks.contains("重体力活")) {
+        if (sicks.contains("重体力活、")) {
             sum += Double.parseDouble((String) config.get(14).get(10));
         }
-        if (sicks.contains("高血压")) {
+        if (sicks.contains("高血压、")) {
             sum += Double.parseDouble((String) config.get(14).get(11));
         }
-        if (sicks.contains("糖尿病")) {
+        if (sicks.contains("糖尿病、")) {
             sum += Double.parseDouble((String) config.get(14).get(12));
         }
-        if (sicks.contains("高血脂")) {
+        if (sicks.contains("高血脂、")) {
             sum += Double.parseDouble((String) config.get(14).get(13));
         }
-        if (sicks.contains("冠心病")) {
+        if (sicks.contains("冠心病、")) {
             sum += Double.parseDouble((String) config.get(14).get(14));
         }
-        if (sicks.contains("肥胖")) {
+        if (sicks.contains("肥胖、")) {
             sum += Double.parseDouble((String) config.get(14).get(15));
         }
-        if (sicks.contains("嗜盐")) {
+        if (sicks.contains("嗜盐、")) {
             sum += Double.parseDouble((String) config.get(14).get(16));
         }
-        if (sicks.contains("高尿酸症")) {
+        if (sicks.contains("高尿酸症、")) {
             sum += Double.parseDouble((String) config.get(14).get(17));
         }
         sum += getAgeRisk(entity, "缺血性脑卒中");
@@ -974,34 +978,34 @@ public class CreateReportAction extends JFrame implements ActionListener {
         } else if ("纯合突变".equals(p53Type)) {
             sum = Double.parseDouble((String) config.get(12).get(6));
         }
-        if (sicks.contains("抑郁")) {
+        if (sicks.contains("抑郁、")) {
             sum += Double.parseDouble((String) config.get(12).get(7));
         }
-        if (sicks.contains("丧偶")) {
+        if (sicks.contains("丧偶、")) {
             sum += Double.parseDouble((String) config.get(12).get(8));
         }
-        if (sicks.contains("脑外伤")) {
+        if (sicks.contains("脑外伤、")) {
             sum += Double.parseDouble((String) config.get(12).get(9));
         }
-        if (sicks.contains("认知功能障碍")) {
+        if (sicks.contains("认知功能障碍、")) {
             sum += Double.parseDouble((String) config.get(12).get(10));
         }
-        if (sicks.contains("高血压")) {
+        if (sicks.contains("高血压、")) {
             sum += Double.parseDouble((String) config.get(12).get(11));
         }
-        if (sicks.contains("糖尿病")) {
+        if (sicks.contains("糖尿病、")) {
             sum += Double.parseDouble((String) config.get(12).get(12));
         }
-        if (sicks.contains("高血脂")) {
+        if (sicks.contains("高血脂、")) {
             sum += Double.parseDouble((String) config.get(12).get(13));
         }
-        if (sicks.contains("痴呆家族史")) {
+        if (sicks.contains("痴呆家族史、")) {
             sum += Double.parseDouble((String) config.get(12).get(14));
         }
-        if (sicks.contains("嗜糖")) {
+        if (sicks.contains("嗜糖、")) {
             sum += Double.parseDouble((String) config.get(12).get(15));
         }
-        if (sicks.contains("嗜油")) {
+        if (sicks.contains("嗜油、")) {
             sum += Double.parseDouble((String) config.get(12).get(16));
         }
 
@@ -1023,34 +1027,34 @@ public class CreateReportAction extends JFrame implements ActionListener {
         } else if ("纯合突变".equals(p53Type)) {
             sum = Double.parseDouble((String) config.get(10).get(6));
         }
-        if (sicks.contains("吸烟")) {
+        if (sicks.contains("吸烟、")) {
             sum += Double.parseDouble((String) config.get(10).get(7));
         }
-        if (sicks.contains("饮酒")) {
+        if (sicks.contains("饮酒、")) {
             sum += Double.parseDouble((String) config.get(10).get(8));
         }
-        if (sicks.contains("肥胖")) {
+        if (sicks.contains("肥胖、")) {
             sum += Double.parseDouble((String) config.get(10).get(9));
         }
-        if (sicks.contains("荤食为主")) {
+        if (sicks.contains("荤食为主、")) {
             sum += Double.parseDouble((String) config.get(10).get(10));
         }
-        if (sicks.contains("高血压")) {
+        if (sicks.contains("高血压、")) {
             sum += Double.parseDouble((String) config.get(10).get(11));
         }
-        if (sicks.contains("糖尿病")) {
+        if (sicks.contains("糖尿病、")) {
             sum += Double.parseDouble((String) config.get(10).get(12));
         }
-        if (sicks.contains("高血脂")) {
+        if (sicks.contains("高血脂、")) {
             sum += Double.parseDouble((String) config.get(10).get(13));
         }
-        if (sicks.contains("高血压家族史")) {
+        if (sicks.contains("高血压家族史、")) {
             sum += Double.parseDouble((String) config.get(10).get(14));
         }
-        if (sicks.contains("嗜糖")) {
+        if (sicks.contains("嗜糖、")) {
             sum += Double.parseDouble((String) config.get(10).get(15));
         }
-        if (sicks.contains("嗜油")) {
+        if (sicks.contains("嗜油、")) {
             sum += Double.parseDouble((String) config.get(10).get(16));
         }
 
@@ -1072,28 +1076,28 @@ public class CreateReportAction extends JFrame implements ActionListener {
         } else if ("纯合突变".equals(p53Type)) {
             sum = Double.parseDouble((String) config.get(8).get(6));
         }
-        if (sicks.contains("吸烟")) {
+        if (sicks.contains("吸烟、")) {
             sum += Double.parseDouble((String) config.get(8).get(7));
         }
-        if (sicks.contains("饮酒")) {
+        if (sicks.contains("饮酒、")) {
             sum += Double.parseDouble((String) config.get(8).get(8));
         }
-        if (sicks.contains("恶性肿瘤家族史")) {
+        if (sicks.contains("恶性肿瘤家族史、")) {
             sum += Double.parseDouble((String) config.get(8).get(9));
         }
-        if (sicks.contains("前列腺炎")) {
+        if (sicks.contains("前列腺炎、")) {
             sum += Double.parseDouble((String) config.get(8).get(10));
         }
-        if (sicks.contains("高血压")) {
+        if (sicks.contains("高血压、")) {
             sum += Double.parseDouble((String) config.get(8).get(11));
         }
-        if (sicks.contains("糖尿病")) {
+        if (sicks.contains("糖尿病、")) {
             sum += Double.parseDouble((String) config.get(8).get(12));
         }
-        if (sicks.contains("前列腺癌")) {
+        if (sicks.contains("前列腺癌、")) {
             sum += Double.parseDouble((String) config.get(8).get(13));
         }
-        if (sicks.contains("前列腺癌家族史")) {
+        if (sicks.contains("前列腺癌家族史、")) {
             sum += Double.parseDouble((String) config.get(8).get(14));
         }
         sum += getAgeRisk(entity, "前列腺癌");
@@ -1114,43 +1118,43 @@ public class CreateReportAction extends JFrame implements ActionListener {
         } else if ("纯合突变".equals(p53Type)) {
             sum = Double.parseDouble((String) config.get(6).get(6));
         }
-        if (sicks.contains("吸烟")) {
+        if (sicks.contains("吸烟、")) {
             sum += Double.parseDouble((String) config.get(6).get(7));
         }
-        if (sicks.contains("饮酒")) {
+        if (sicks.contains("饮酒、")) {
             sum += Double.parseDouble((String) config.get(6).get(8));
         }
-        if (sicks.contains("消化道溃疡")) {
+        if (sicks.contains("消化道溃疡、")) {
             sum += Double.parseDouble((String) config.get(6).get(9));
         }
-        if (sicks.contains("直结肠炎")) {
+        if (sicks.contains("直结肠炎、")) {
             sum += Double.parseDouble((String) config.get(6).get(10));
         }
-        if (sicks.contains("高血压")) {
+        if (sicks.contains("高血压、")) {
             sum += Double.parseDouble((String) config.get(6).get(11));
         }
-        if (sicks.contains("糖尿病")) {
+        if (sicks.contains("糖尿病、")) {
             sum += Double.parseDouble((String) config.get(6).get(12));
         }
-        if (sicks.contains("结直肠癌")) {
+        if (sicks.contains("结直肠癌、")) {
             sum += Double.parseDouble((String) config.get(6).get(13));
         }
-        if (sicks.contains("肠息肉史")) {
+        if (sicks.contains("肠息肉史、")) {
             sum += Double.parseDouble((String) config.get(6).get(14));
         }
-        if (sicks.contains("喜腌制食物")) {
+        if (sicks.contains("喜腌制食物、")) {
             sum += Double.parseDouble((String) config.get(6).get(15));
         }
-        if (sicks.contains("嗜盐")) {
+        if (sicks.contains("嗜盐、")) {
             sum += Double.parseDouble((String) config.get(6).get(16));
         }
-        if (sicks.contains("便秘史")) {
+        if (sicks.contains("便秘史、")) {
             sum += Double.parseDouble((String) config.get(6).get(17));
         }
-        if (sicks.contains("血便史")) {
+        if (sicks.contains("血便史、")) {
             sum += Double.parseDouble((String) config.get(6).get(18));
         }
-        if (sicks.contains("恶性肿瘤家族史")) {
+        if (sicks.contains("恶性肿瘤家族史、")) {
             sum += Double.parseDouble((String) config.get(6).get(19));
         }
         sum += getAgeRisk(entity, "结直肠癌");
@@ -1166,11 +1170,11 @@ public class CreateReportAction extends JFrame implements ActionListener {
             level = "正常";
         } else if (sum > 1.0000 && sum <= 1.5000) {
             level = "一般";
-        } else if (sum > 1.5000 && sum <= 2.0000) {
+        } else if (sum > 1.5000 && sum <= 2.5000) {
             level = "关注";
-        } else if (sum > 2.0000 && sum <= 2.5000) {
+        } else if (sum > 2.5000 && sum <= 3.5000) {
             level = "特别关注";
-        } else if (sum > 2.5000) {
+        } else if (sum > 3.5000) {
             level = "重视";
         }
         return level;
@@ -1186,43 +1190,43 @@ public class CreateReportAction extends JFrame implements ActionListener {
         } else if ("纯合突变".equals(p53Type)) {
             sum = Double.parseDouble((String) config.get(4).get(6));
         }
-        if (sicks.contains("吸烟")) {
+        if (sicks.contains("吸烟、")) {
             sum += Double.parseDouble((String) config.get(4).get(7));
         }
-        if (sicks.contains("饮酒")) {
+        if (sicks.contains("饮酒、")) {
             sum += Double.parseDouble((String) config.get(4).get(8));
         }
-        if (sicks.contains("喜鱼生类食物")) {
+        if (sicks.contains("喜鱼生类食物、")) {
             sum += Double.parseDouble((String) config.get(4).get(9));
         }
-        if (sicks.contains("乙型肝炎病毒慢性感染")) {
+        if (sicks.contains("乙型肝炎病毒慢性感染、")) {
             sum += Double.parseDouble((String) config.get(4).get(10));
         }
-        if (sicks.contains("高血压")) {
+        if (sicks.contains("高血压、")) {
             sum += Double.parseDouble((String) config.get(4).get(11));
         }
-        if (sicks.contains("糖尿病")) {
+        if (sicks.contains("糖尿病、")) {
             sum += Double.parseDouble((String) config.get(4).get(12));
         }
-        if (sicks.contains("肺癌")) {
+        if (sicks.contains("肺癌、")) {
             sum += Double.parseDouble((String) config.get(4).get(13));
         }
-        if (sicks.contains("肺癌家族史")) {
+        if (sicks.contains("肺癌家族史、")) {
             sum += Double.parseDouble((String) config.get(4).get(14));
         }
-        if (sicks.contains("肝硬化")) {
+        if (sicks.contains("肝硬化、")) {
             sum += Double.parseDouble((String) config.get(4).get(15));
         }
-        if (sicks.contains("脂肪肝")) {
+        if (sicks.contains("脂肪肝、")) {
             sum += Double.parseDouble((String) config.get(4).get(16));
         }
-        if (sicks.contains("肝炎")) {
+        if (sicks.contains("肝炎、")) {
             sum += Double.parseDouble((String) config.get(4).get(17));
         }
-        if (sicks.contains("喜腌制食物")) {
+        if (sicks.contains("喜腌制食物、")) {
             sum += Double.parseDouble((String) config.get(4).get(18));
         }
-        if (sicks.contains("肝病")) {
+        if (sicks.contains("肝病、")) {
             sum += Double.parseDouble((String) config.get(4).get(19));
         }
         sum += getAgeRisk(entity, "肝癌");
@@ -1243,37 +1247,37 @@ public class CreateReportAction extends JFrame implements ActionListener {
         } else if ("纯合突变".equals(p53Type)) {
             sum = Double.parseDouble((String) config.get(2).get(6));
         }
-        if (sicks.contains("吸烟")) {
+        if (sicks.contains("吸烟、")) {
             sum += Double.parseDouble((String) config.get(2).get(7));
         }
-        if (sicks.contains("饮酒")) {
+        if (sicks.contains("饮酒、")) {
             sum += Double.parseDouble((String) config.get(2).get(8));
         }
-        if (sicks.contains("肺结核")) {
+        if (sicks.contains("肺结核、")) {
             sum += Double.parseDouble((String) config.get(2).get(9));
         }
-        if (sicks.contains("情绪不好")) {
+        if (sicks.contains("情绪不好、")) {
             sum += Double.parseDouble((String) config.get(2).get(10));
         }
-        if (sicks.contains("高血压")) {
+        if (sicks.contains("高血压、")) {
             sum += Double.parseDouble((String) config.get(2).get(11));
         }
-        if (sicks.contains("糖尿病")) {
+        if (sicks.contains("糖尿病、")) {
             sum += Double.parseDouble((String) config.get(2).get(12));
         }
-        if (sicks.contains("肺癌")) {
+        if (sicks.contains("肺癌、")) {
             sum += Double.parseDouble((String) config.get(2).get(13));
         }
-        if (sicks.contains("肺癌家族史")) {
+        if (sicks.contains("肺癌家族史、")) {
             sum += Double.parseDouble((String) config.get(2).get(14));
         }
-        if (sicks.contains("支气管炎")) {
+        if (sicks.contains("支气管炎、")) {
             sum += Double.parseDouble((String) config.get(2).get(15));
         }
-        if (sicks.contains("肺炎")) {
+        if (sicks.contains("肺炎、")) {
             sum += Double.parseDouble((String) config.get(2).get(16));
         }
-        if (sicks.contains("肺病")) {
+        if (sicks.contains("肺病、")) {
             sum += Double.parseDouble((String) config.get(2).get(17));
         }
         sum += getAgeRisk(entity, "肺癌");
