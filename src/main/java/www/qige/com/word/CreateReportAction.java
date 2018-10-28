@@ -70,8 +70,8 @@ public class CreateReportAction extends JFrame implements ActionListener {
         this.setVisible(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         try {
-//            config = new ReadConfigExcelUtils("template\\config.xlsx").readExcelContent();
-            config = new ReadConfigExcelUtils("D:\\ideaWork\\out\\artifacts\\worReport_jar\\template\\config.xlsx").readExcelContent();
+            config = new ReadConfigExcelUtils("template\\config.xlsx").readExcelContent();
+//            config = new ReadConfigExcelUtils("D:\\ideaWork\\out\\artifacts\\worReport_jar\\template\\config.xlsx").readExcelContent();
         } catch (Exception e) {
             System.out.println("加载配置文件出错");
             e.printStackTrace();
@@ -197,7 +197,7 @@ public class CreateReportAction extends JFrame implements ActionListener {
                             }
                             entity.setSicks(thesicks);
                             if (familySicks.endsWith("、")) {
-                                familySicks = familySicks.substring(0, thesicks.length() - 1);
+                                familySicks = familySicks.substring(0, familySicks.length() - 1);
                             }
                             entity.setFamilySicks(familySicks);
                             //结果分析
