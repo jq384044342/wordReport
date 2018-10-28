@@ -142,7 +142,11 @@ public class CreateReportAction extends JFrame implements ActionListener {
                             StringBuffer sbSicks = new StringBuffer();
                             for (int i = 5; i <= 34; i++) {
                                 if (StringUtils.isNoneEmpty((String) entry.getValue().get(i))) {
-                                    sbSicks.append((String) entry.getValue().get(i)+"、");
+                                    if (((String) entry.getValue().get(i)).endsWith("、")) {
+                                        sbSicks.append((String) entry.getValue().get(i));
+                                    } else {
+                                        sbSicks.append((String) entry.getValue().get(i) + "、");
+                                    }
                                 }
                             }
                             String thesicks = sbSicks.toString();
@@ -151,7 +155,11 @@ public class CreateReportAction extends JFrame implements ActionListener {
                             StringBuffer setFamilySicks = new StringBuffer();
                             for (int j = 35; j <= 54; j++) {
                                 if (StringUtils.isNoneEmpty((String) entry.getValue().get(j))) {
-                                    setFamilySicks.append((String) entry.getValue().get(j)+"、");
+                                    if(((String) entry.getValue().get(j)).endsWith("、")){
+                                        setFamilySicks.append((String) entry.getValue().get(j));
+                                    }else {
+                                        setFamilySicks.append((String) entry.getValue().get(j) + "、");
+                                    }
                                 }
                             }
                             String familySicks = setFamilySicks.toString();
@@ -219,8 +227,8 @@ public class CreateReportAction extends JFrame implements ActionListener {
                                     sb.append("大量证据表明，肝癌的发生是一个多阶段、多因素共同累积的结果，其发生过程是由体外致癌因素联合自身免疫缺陷、基因水平等一系列因素导致的。肝癌病因复杂，包括不可控因素及可控制因素，不可控因素包括性别、年龄、血型、宿主遗传、基因类型及基因突变等。饮酒与吸烟是肝癌发生的危险因素之一，另外还有健康状况方面代谢综合征如肝硬化、肥胖、糖尿病、非酒精性脂肪肝以及社会心理及精神因素肝癌发生的危险因素之一。\n    ");
                                 }
                                 if (entity.getSicks().contains("肺炎") || entity.getSicks().contains("支气管炎")
-                                        ||entity.getSicks().contains("气管炎") || entity.getSicks().contains("肺结核")
-                                        ||entity.getSicks().contains("肺病")) {
+                                        || entity.getSicks().contains("气管炎") || entity.getSicks().contains("肺结核")
+                                        || entity.getSicks().contains("肺病")) {
                                     sb.append("研究证实，气管炎、肺结核等肺病是并发肺癌的主要原因，减少气管炎患者的人数将大大减少肺癌的发病率。气管感染的患者促使肺脏内的炎症因子的释放，浸润并作用于肺内的细胞，分泌IL-1、IL-6等细胞因子及肿瘤的坏死因子及其他相关因子。这些因子将作用于肺脏细胞，引起细胞的反应，最后导致肺癌发生。鉴于您积极治疗有相关疾病，同时一定不要抽烟，并远离二手烟接触，为您的健康保驾护航！\n    ");
                                 }
                                 if (entity.getSicks().contains("吸烟")) {
@@ -269,8 +277,8 @@ public class CreateReportAction extends JFrame implements ActionListener {
                                     sb1.append("大量证据表明，肝癌的发生是一个多阶段、多因素共同累积的结果，其发生过程是由体外致癌因素联合自身免疫缺陷、基因水平等一系列因素导致的。肝癌病因复杂，包括不可控因素及可控制因素，不可控因素包括性别、年龄、血型、宿主遗传、基因类型及基因突变等。饮酒与吸烟是肝癌发生的危险因素之一，另外还有健康状况方面代谢综合征如肝硬化、肥胖、糖尿病、非酒精性脂肪肝以及社会心理及精神因素肝癌发生的危险因素之一。\n    ");
                                 }
                                 if (sicks.contains("肺炎") || sicks.contains("支气管炎")
-                                        ||sicks.contains("气管炎") || sicks.contains("肺结核")
-                                        ||sicks.contains("肺病")) {
+                                        || sicks.contains("气管炎") || sicks.contains("肺结核")
+                                        || sicks.contains("肺病")) {
                                     sb1.append("研究证实，气管炎、肺结核等肺病是并发肺癌的主要原因，减少气管炎患者的人数将大大减少肺癌的发病率。气管感染的患者促使肺脏内的炎症因子的释放，浸润并作用于肺内的细胞，分泌IL-1、IL-6等细胞因子及肿瘤的坏死因子及其他相关因子。这些因子将作用于肺脏细胞，引起细胞的反应，最后导致肺癌发生。鉴于您积极治疗有相关疾病，同时一定不要抽烟，并远离二手烟接触，为您的健康保驾护航！\n    ");
                                 }
                                 if (sicks.contains("吸烟")) {
@@ -350,11 +358,11 @@ public class CreateReportAction extends JFrame implements ActionListener {
     private void setCataRiskAndLevelWomen(String p53Type, String apoeType, ReportEntity entity) {
         String sicks = entity.getSicks() + entity.getFamilySicks();
         double sum = 0;
-        if ("正常".equals(p53Type)) {
+        if ("正常".equals(apoeType)) {
             sum = Double.parseDouble((String) config.get(36).get(4));
-        } else if ("杂合突变".equals(p53Type)) {
+        } else if ("杂合突变".equals(apoeType)) {
             sum = Double.parseDouble((String) config.get(36).get(5));
-        } else if ("纯合突变".equals(p53Type)) {
+        } else if ("纯合突变".equals(apoeType)) {
             sum = Double.parseDouble((String) config.get(36).get(6));
         }
         if (sicks.contains("吸烟、")) {
@@ -408,11 +416,11 @@ public class CreateReportAction extends JFrame implements ActionListener {
     private void setLscheRiskAndLevelWomen(String p53Type, String apoeType, ReportEntity entity) {
         String sicks = entity.getSicks() + entity.getFamilySicks();
         double sum = 0;
-        if ("正常".equals(p53Type)) {
+        if ("正常".equals(apoeType)) {
             sum = Double.parseDouble((String) config.get(34).get(4));
-        } else if ("杂合突变".equals(p53Type)) {
+        } else if ("杂合突变".equals(apoeType)) {
             sum = Double.parseDouble((String) config.get(34).get(5));
-        } else if ("纯合突变".equals(p53Type)) {
+        } else if ("纯合突变".equals(apoeType)) {
             sum = Double.parseDouble((String) config.get(34).get(6));
         }
         if (sicks.contains("吸烟、")) {
@@ -459,11 +467,11 @@ public class CreateReportAction extends JFrame implements ActionListener {
     private void setFemoraRiskAndLevelWomen(String p53Type, String apoeType, ReportEntity entity) {
         String sicks = entity.getSicks() + entity.getFamilySicks();
         double sum = 0;
-        if ("正常".equals(p53Type)) {
+        if ("正常".equals(apoeType)) {
             sum = Double.parseDouble((String) config.get(32).get(4));
-        } else if ("杂合突变".equals(p53Type)) {
+        } else if ("杂合突变".equals(apoeType)) {
             sum = Double.parseDouble((String) config.get(32).get(5));
-        } else if ("纯合突变".equals(p53Type)) {
+        } else if ("纯合突变".equals(apoeType)) {
             sum = Double.parseDouble((String) config.get(32).get(6));
         }
         if (sicks.contains("吸烟、")) {
@@ -497,11 +505,11 @@ public class CreateReportAction extends JFrame implements ActionListener {
     private void setBreastRiskAndLevelWomen(String p53Type, String apoeType, ReportEntity entity) {
         String sicks = entity.getSicks() + entity.getFamilySicks();
         double sum = 0;
-        if ("正常".equals(p53Type)) {
+        if ("正常".equals(apoeType)) {
             sum = Double.parseDouble((String) config.get(30).get(4));
-        } else if ("杂合突变".equals(p53Type)) {
+        } else if ("杂合突变".equals(apoeType)) {
             sum = Double.parseDouble((String) config.get(30).get(5));
-        } else if ("纯合突变".equals(p53Type)) {
+        } else if ("纯合突变".equals(apoeType)) {
             sum = Double.parseDouble((String) config.get(30).get(6));
         }
         if (sicks.contains("吸烟、")) {
@@ -816,11 +824,11 @@ public class CreateReportAction extends JFrame implements ActionListener {
     private void setInfaRiskAndLevel(String p53Type, String apoeType, ReportEntity entity) {
         String sicks = entity.getSicks() + entity.getFamilySicks();
         double sum = 0;
-        if ("正常".equals(p53Type)) {
+        if ("正常".equals(apoeType)) {
             sum = Double.parseDouble((String) config.get(18).get(4));
-        } else if ("杂合突变".equals(p53Type)) {
+        } else if ("杂合突变".equals(apoeType)) {
             sum = Double.parseDouble((String) config.get(18).get(5));
-        } else if ("纯合突变".equals(p53Type)) {
+        } else if ("纯合突变".equals(apoeType)) {
             sum = Double.parseDouble((String) config.get(18).get(6));
         }
         if (sicks.contains("吸烟、")) {
@@ -868,11 +876,11 @@ public class CreateReportAction extends JFrame implements ActionListener {
     private void setCereRiskAndLevel(String p53Type, String apoeType, ReportEntity entity) {
         String sicks = entity.getSicks() + entity.getFamilySicks();
         double sum = 0;
-        if ("正常".equals(p53Type)) {
+        if ("正常".equals(apoeType)) {
             sum = Double.parseDouble((String) config.get(16).get(4));
-        } else if ("杂合突变".equals(p53Type)) {
+        } else if ("杂合突变".equals(apoeType)) {
             sum = Double.parseDouble((String) config.get(16).get(5));
-        } else if ("纯合突变".equals(p53Type)) {
+        } else if ("纯合突变".equals(apoeType)) {
             sum = Double.parseDouble((String) config.get(16).get(6));
         }
         if (sicks.contains("吸烟、")) {
@@ -920,11 +928,11 @@ public class CreateReportAction extends JFrame implements ActionListener {
     private void setLscheRiskAndLevel(String p53Type, String apoeType, ReportEntity entity) {
         String sicks = entity.getSicks() + entity.getFamilySicks();
         double sum = 0;
-        if ("正常".equals(p53Type)) {
+        if ("正常".equals(apoeType)) {
             sum = Double.parseDouble((String) config.get(14).get(4));
-        } else if ("杂合突变".equals(p53Type)) {
+        } else if ("杂合突变".equals(apoeType)) {
             sum = Double.parseDouble((String) config.get(14).get(5));
-        } else if ("纯合突变".equals(p53Type)) {
+        } else if ("纯合突变".equals(apoeType)) {
             sum = Double.parseDouble((String) config.get(14).get(6));
         }
         if (sicks.contains("吸烟、")) {
@@ -971,11 +979,11 @@ public class CreateReportAction extends JFrame implements ActionListener {
     private void setAlzhRiskAndLevel(String p53Type, String apoeType, ReportEntity entity) {
         String sicks = entity.getSicks() + entity.getFamilySicks();
         double sum = 0;
-        if ("正常".equals(p53Type)) {
+        if ("正常".equals(apoeType)) {
             sum = Double.parseDouble((String) config.get(12).get(4));
-        } else if ("杂合突变".equals(p53Type)) {
+        } else if ("杂合突变".equals(apoeType)) {
             sum = Double.parseDouble((String) config.get(12).get(5));
-        } else if ("纯合突变".equals(p53Type)) {
+        } else if ("纯合突变".equals(apoeType)) {
             sum = Double.parseDouble((String) config.get(12).get(6));
         }
         if (sicks.contains("抑郁、")) {
@@ -1020,11 +1028,11 @@ public class CreateReportAction extends JFrame implements ActionListener {
     private void setHyperRiskAndLevel(String p53Type, String apoeType, ReportEntity entity) {
         String sicks = entity.getSicks() + entity.getFamilySicks();
         double sum = 0;
-        if ("正常".equals(p53Type)) {
+        if ("正常".equals(apoeType)) {
             sum = Double.parseDouble((String) config.get(10).get(4));
-        } else if ("杂合突变".equals(p53Type)) {
+        } else if ("杂合突变".equals(apoeType)) {
             sum = Double.parseDouble((String) config.get(10).get(5));
-        } else if ("纯合突变".equals(p53Type)) {
+        } else if ("纯合突变".equals(apoeType)) {
             sum = Double.parseDouble((String) config.get(10).get(6));
         }
         if (sicks.contains("吸烟、")) {
@@ -1290,7 +1298,7 @@ public class CreateReportAction extends JFrame implements ActionListener {
 
     private double getAgeRisk(ReportEntity entity, String type) {
         String age = entity.getAge();
-        if(Integer.parseInt(age)<20){
+        if (Integer.parseInt(age) < 20) {
             return 0;
         }
         if ("男".equals(entity.getSex())) {
