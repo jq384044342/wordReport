@@ -134,7 +134,7 @@ public class CreateReportAction extends JFrame implements ActionListener {
                             entity.setNum(num);
                             String sex = (String) entry.getValue().get(3);
                             entity.setSex(sex);
-                            String age = (String) entry.getValue().get(4);
+                            String age = StringUtils.isEmpty((String) entry.getValue().get(4))?"":(String) entry.getValue().get(4);
                             if (age.contains(".0")) {
                                 age = age.replace(".0", "");
                             }
@@ -1298,7 +1298,7 @@ public class CreateReportAction extends JFrame implements ActionListener {
 
     private double getAgeRisk(ReportEntity entity, String type) {
         String age = entity.getAge();
-        if (Integer.parseInt(age) < 20) {
+        if (StringUtils.isEmpty(age)||Integer.parseInt(age) < 20) {
             return 0;
         }
         if ("男".equals(entity.getSex())) {
