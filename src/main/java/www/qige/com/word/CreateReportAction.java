@@ -395,15 +395,6 @@ public class CreateReportAction extends JFrame implements ActionListener {
         if (sicks.contains("糖尿病家族病史、")) {
             sum += Double.parseDouble((String) config.get(36).get(16));
         }
-        if (sicks.contains("便秘史、")) {
-            sum += Double.parseDouble((String) config.get(36).get(17));
-        }
-        if (sicks.contains("血便史、")) {
-            sum += Double.parseDouble((String) config.get(36).get(17));
-        }
-        if (sicks.contains("恶性肿瘤家族史、")) {
-            sum += Double.parseDouble((String) config.get(36).get(17));
-        }
         sum += getAgeRisk(entity, "白内障");
         String level = "";
         level = getRiskLevel(sum, level);
