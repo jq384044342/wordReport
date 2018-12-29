@@ -9,12 +9,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class CreateReportAction extends JFrame implements ActionListener {
     JButton jbPerson = new JButton("导入个人信息");
@@ -36,8 +35,10 @@ public class CreateReportAction extends JFrame implements ActionListener {
     private Map<Integer, Map<Integer, Object>> resultInfo;
     private java.util.List<String> resultTime = new ArrayList<>();
     private Map<String, Map<Integer, Object>> resultMap = new HashMap<>();
+    private Map<String, Map<Integer, Object>> picConfigMap = new HashMap<>();
     private Map<Integer, Map<Integer, Object>> config = new HashMap<>();
     java.util.List<ReportEntity> reportList = new ArrayList<ReportEntity>();
+    Properties properties = new Properties();
 
     public CreateReportAction() {
         jbPerson.setActionCommand("openPerson");
@@ -72,6 +73,21 @@ public class CreateReportAction extends JFrame implements ActionListener {
         try {
             config = new ReadConfigExcelUtils("template\\config.xlsx").readExcelContent();
 //            config = new ReadConfigExcelUtils("D:\\ideaWork\\out\\artifacts\\worReport_jar\\template\\config.xlsx").readExcelContent();
+            // 使用InPutStream流读取properties文件
+            BufferedReader bufferedReader = new BufferedReader(new FileReader("template\\riskLevel.properties"));
+            properties.load(bufferedReader);
+            System.out.println(properties.getProperty("正常"));
+            System.out.println(properties.getProperty("一般"));
+            System.out.println(properties.getProperty("关注"));
+            System.out.println(properties.getProperty("特别关注"));
+            System.out.println(properties.getProperty("重视"));
+            ReadPicConfigExcelUtils readPicConfigExcelUtils = new ReadPicConfigExcelUtils("template\\picConfig.xlsx");
+            Map<Integer, Map<Integer, Object>> integerMapMap = readPicConfigExcelUtils.readExcelContent();
+            for (Map.Entry<Integer, Map<Integer, Object>> entry : integerMapMap.entrySet()){
+                String gene = (String) entry.getValue().get(3);
+                String type = (String) entry.getValue().get(5);
+                picConfigMap.put(gene + type, entry.getValue());
+            }
         } catch (Exception e) {
             System.out.println("加载配置文件出错");
             e.printStackTrace();
@@ -175,16 +191,16 @@ public class CreateReportAction extends JFrame implements ActionListener {
                                 p53Type = getP53Type(p53Res);
                                 if (p53Type.isEmpty()) continue;//跳出循环
                                 entity.setP53Type(p53Type);
-                                entity.setP53Pic1((PictureData) resultMap.get(num + "rs1042522").get(7));
+                                entity.setP53Pic1(getPic(entity.getP53Type(),"rs1042522"));
                                 PictureData apoePic1;
                                 if ("男".equals(sex)) {
                                     apoeRes = (String) resultMap.get(num + "rs429358").get(5);
                                     apoeType = getApoeType(apoeRes);
-                                    apoePic1 = (PictureData) resultMap.get(num + "rs429358").get(7);
+                                    apoePic1 = getPic(apoeType,"rs429358");
                                 } else {
                                     apoeRes = (String) resultMap.get(num + "rs1801133").get(5);
                                     apoeType = getMTHFRType(apoeRes);
-                                    apoePic1 = (PictureData) resultMap.get(num + "rs1801133").get(7);
+                                    apoePic1 = getPic(apoeType,"rs1801133");
                                 }
                                 entity.setApoeRes(apoeRes);
                                 if (apoeType.isEmpty()) continue;
@@ -340,6 +356,29 @@ public class CreateReportAction extends JFrame implements ActionListener {
                 e1.printStackTrace();
             }
         }
+    }
+
+    //type ATCG
+    private PictureData getPic(String type, String gene) {
+        for (Map.Entry<String, Map<Integer, Object>> entry : picConfigMap.entrySet()){
+            String picGene = (String) entry.getValue().get(3);
+            if(picGene.equals(gene)){
+                String picGeneType = (String) entry.getValue().get(5);
+                type = type.replaceAll("/","");
+                type = 1==type.length()?type+type:type;
+                char[] chars = type.toCharArray();
+                if(chars[0] == chars[1]){
+                    if(picGeneType.equals(type)){
+                        return (PictureData) entry.getValue().get(7);
+                    }
+                }else if(picGeneType.contains(String.valueOf(chars[0]))&&picGeneType.contains(String.valueOf(chars[1]))){
+                    return (PictureData) entry.getValue().get(7);
+                }
+            }else {
+                continue;
+            }
+        }
+        return null;
     }
 
     private void setRiskAndLevelWomen(String p53Type, String apoeType, ReportEntity entity) {
@@ -1165,15 +1204,20 @@ public class CreateReportAction extends JFrame implements ActionListener {
     }
 
     private String getRiskLevel(double sum, String level) {
-        if (sum == 1.0000) {
+        double 正常 = Double.parseDouble(properties.getProperty("正常"));
+        double 一般 = Double.parseDouble(properties.getProperty("一般"));
+        double 关注 = Double.parseDouble(properties.getProperty("关注"));
+        double 特别关注 = Double.parseDouble(properties.getProperty("特别关注"));
+        double 重视 = Double.parseDouble(properties.getProperty("重视"));
+        if (sum == 正常) {
             level = "正常";
-        } else if (sum > 1.0000 && sum <= 1.5000) {
+        } else if (sum > 正常 && sum <= 一般) {
             level = "一般";
-        } else if (sum > 1.5000 && sum <= 2.5000) {
+        } else if (sum > 一般 && sum <= 关注) {
             level = "关注";
-        } else if (sum > 2.5000 && sum <= 3.5000) {
+        } else if (sum > 关注 && sum <= 特别关注) {
             level = "特别关注";
-        } else if (sum > 3.5000) {
+        } else if (sum > 重视) {
             level = "重视";
         }
         return level;
@@ -1337,75 +1381,75 @@ public class CreateReportAction extends JFrame implements ActionListener {
     }
 
     private String getMTHFRType(String apoeRes) {
-        if ("A".equals(apoeRes) || "A/A".equals(apoeRes)) {
+        if ("A".equals(apoeRes) || "A/A".equals(apoeRes)|| "AA".equals(apoeRes)) {
             return "纯合突变";
-        } else if ("A/T".equals(apoeRes) || "T/A".equals(apoeRes)) {
+        } else if ("A/T".equals(apoeRes) || "T/A".equals(apoeRes)|| "AT".equals(apoeRes)|| "TA".equals(apoeRes)) {
             return "纯合突变";
-        } else if ("A/C".equals(apoeRes) || "C/A".equals(apoeRes)) {
+        } else if ("A/C".equals(apoeRes) || "C/A".equals(apoeRes)|| "AC".equals(apoeRes)|| "CA".equals(apoeRes)) {
             return "杂合突变";
-        } else if ("A/G".equals(apoeRes) || "G/A".equals(apoeRes)) {
+        } else if ("A/G".equals(apoeRes) || "G/A".equals(apoeRes)|| "AG".equals(apoeRes)|| "GA".equals(apoeRes)) {
             return "纯合突变";
-        } else if ("T".equals(apoeRes) || "T/T".equals(apoeRes)) {
+        } else if ("T".equals(apoeRes) || "T/T".equals(apoeRes)|| "TT".equals(apoeRes)) {
             return "纯合突变";
-        } else if ("T/C".equals(apoeRes) || "C/T".equals(apoeRes)) {
+        } else if ("T/C".equals(apoeRes) || "C/T".equals(apoeRes)|| "TC".equals(apoeRes)|| "CT".equals(apoeRes)) {
             return "杂合突变";
-        } else if ("T/G".equals(apoeRes) || "G/T".equals(apoeRes)) {
+        } else if ("T/G".equals(apoeRes) || "G/T".equals(apoeRes)|| "TG".equals(apoeRes)|| "GT".equals(apoeRes)) {
             return "纯合突变";
-        } else if ("C".equals(apoeRes) || "C/C".equals(apoeRes)) {
+        } else if ("C".equals(apoeRes) || "C/C".equals(apoeRes)|| "CC".equals(apoeRes)) {
             return "正常";
-        } else if ("C/G".equals(apoeRes) || "G/C".equals(apoeRes)) {
+        } else if ("C/G".equals(apoeRes) || "G/C".equals(apoeRes)|| "CG".equals(apoeRes)|| "GC".equals(apoeRes)) {
             return "杂合突变";
-        } else if ("G".equals(apoeRes) || "G/G".equals(apoeRes)) {
+        } else if ("G".equals(apoeRes) || "G/G".equals(apoeRes)|| "GG".equals(apoeRes)) {
             return "纯合突变";
         }
         return "";
     }
 
     private String getApoeType(String apoeRes) {
-        if ("A".equals(apoeRes) || "A/A".equals(apoeRes)) {
+        if ("A".equals(apoeRes) || "A/A".equals(apoeRes)|| "AA".equals(apoeRes)) {
             return "纯合突变";
-        } else if ("A/T".equals(apoeRes) || "T/A".equals(apoeRes)) {
+        } else if ("A/T".equals(apoeRes) || "T/A".equals(apoeRes)|| "AT".equals(apoeRes)|| "TA".equals(apoeRes)) {
             return "纯合突变";
-        } else if ("A/C".equals(apoeRes) || "C/A".equals(apoeRes)) {
+        } else if ("A/C".equals(apoeRes) || "C/A".equals(apoeRes)|| "AC".equals(apoeRes)|| "CA".equals(apoeRes)) {
             return "杂合突变";
-        } else if ("A/G".equals(apoeRes) || "G/A".equals(apoeRes)) {
+        } else if ("A/G".equals(apoeRes) || "G/A".equals(apoeRes)|| "AG".equals(apoeRes)|| "GA".equals(apoeRes)) {
             return "纯合突变";
-        } else if ("T".equals(apoeRes) || "T/T".equals(apoeRes)) {
+        } else if ("T".equals(apoeRes) || "T/T".equals(apoeRes)|| "TT".equals(apoeRes)) {
             return "纯合突变";
-        } else if ("T/C".equals(apoeRes) || "C/T".equals(apoeRes)) {
+        } else if ("T/C".equals(apoeRes) || "C/T".equals(apoeRes)|| "TC".equals(apoeRes)|| "CT".equals(apoeRes)) {
             return "杂合突变";
-        } else if ("T/G".equals(apoeRes) || "G/T".equals(apoeRes)) {
+        } else if ("T/G".equals(apoeRes) || "G/T".equals(apoeRes)|| "TG".equals(apoeRes)|| "GT".equals(apoeRes)) {
             return "纯合突变";
-        } else if ("C".equals(apoeRes) || "C/C".equals(apoeRes)) {
+        } else if ("C".equals(apoeRes) || "C/C".equals(apoeRes)|| "CC".equals(apoeRes)) {
             return "正常";
-        } else if ("C/G".equals(apoeRes) || "G/C".equals(apoeRes)) {
+        } else if ("C/G".equals(apoeRes) || "G/C".equals(apoeRes)|| "CG".equals(apoeRes)|| "GC".equals(apoeRes)) {
             return "杂合突变";
-        } else if ("G/G".equals(apoeRes) || "G".equals(apoeRes)) {
+        } else if ("G/G".equals(apoeRes) || "G".equals(apoeRes)|| "GG".equals(apoeRes)) {
             return "纯合突变";
         }
         return "";
     }
 
     private String getP53Type(String p53Res) {
-        if ("A".equals(p53Res) || "A/A".equals(p53Res)) {
+        if ("A".equals(p53Res) || "A/A".equals(p53Res)|| "AA".equals(p53Res)) {
             return "正常";
-        } else if ("A/T".equals(p53Res) || "T/A".equals(p53Res)) {
+        } else if ("A/T".equals(p53Res) || "T/A".equals(p53Res)|| "AT".equals(p53Res)|| "TA".equals(p53Res)) {
             return "杂合突变";
-        } else if ("A/C".equals(p53Res) || "C/A".equals(p53Res)) {
+        } else if ("A/C".equals(p53Res) || "C/A".equals(p53Res)||"AC".equals(p53Res) || "CA".equals(p53Res)) {
             return "杂合突变";
-        } else if ("A/G".equals(p53Res) || "G/A".equals(p53Res)) {
+        } else if ("A/G".equals(p53Res) || "G/A".equals(p53Res)||"AG".equals(p53Res) || "GA".equals(p53Res)) {
             return "杂合突变";
-        } else if ("T".equals(p53Res) || "T/T".equals(p53Res)) {
+        } else if ("T".equals(p53Res) || "T/T".equals(p53Res)||"TT".equals(p53Res)) {
             return "纯合突变";
-        } else if ("T/C".equals(p53Res) || "C/T".equals(p53Res)) {
+        } else if ("T/C".equals(p53Res) || "C/T".equals(p53Res)||"TC".equals(p53Res) || "CT".equals(p53Res)) {
             return "纯合突变";
-        } else if ("T/G".equals(p53Res) || "G/T".equals(p53Res)) {
+        } else if ("T/G".equals(p53Res) || "G/T".equals(p53Res)||"TG".equals(p53Res) || "GT".equals(p53Res)) {
             return "纯合突变";
-        } else if ("C".equals(p53Res) || "C/C".equals(p53Res)) {
+        } else if ("C".equals(p53Res) || "C/C".equals(p53Res)||"CC".equals(p53Res)) {
             return "纯合突变";
-        } else if ("C/G".equals(p53Res) || "G/C".equals(p53Res)) {
+        } else if ("C/G".equals(p53Res) || "G/C".equals(p53Res)||"CG".equals(p53Res) || "GC".equals(p53Res)) {
             return "纯合突变";
-        } else if ("G".equals(p53Res) || "G/G".equals(p53Res)) {
+        } else if ("G".equals(p53Res) || "G/G".equals(p53Res)|| "GG".equals(p53Res)) {
             return "纯合突变";
         }
         return "";

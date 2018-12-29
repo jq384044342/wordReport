@@ -1,6 +1,6 @@
 package www.qige.com.word;
 
-import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -13,13 +13,13 @@ import java.util.Map;
 /**
  * Created by Administrator on 2018/6/20 0020.
  */
-public class ReadExcelUtils {
+public class ReadPicConfigExcelUtils {
 
     private Workbook wb;
     private Sheet sheet;
     private Row row;
 
-    public ReadExcelUtils(String filepath) {
+    public ReadPicConfigExcelUtils(String filepath) {
         if(filepath==null){
             return;
         }
@@ -79,7 +79,7 @@ public class ReadExcelUtils {
         int rowNum = sheet.getLastRowNum();
         row = sheet.getRow(0);
         int colNum = row.getPhysicalNumberOfCells();
-//        List<? extends PictureData> pictures = wb.getAllPictures();
+        List<? extends PictureData> pictures = wb.getAllPictures();
 //        File picTmpPath = new File("D:\\tmp\\") ;
 //        for(int i=0;i<pictures.size();i++){
 //            try {
@@ -107,7 +107,7 @@ public class ReadExcelUtils {
                     Object obj = getCellFormatValue(row.getCell(j));
                     cellValue.put(j, obj);
                 }else if(j == 7){
-                    cellValue.put(7, "");
+                    cellValue.put(7, pictures.get(i-tmp));
                 }
                 j++;
             }

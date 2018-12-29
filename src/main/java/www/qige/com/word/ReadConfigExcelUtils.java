@@ -81,18 +81,6 @@ public class ReadConfigExcelUtils {
         int rowNum = sheet.getLastRowNum();
         row = sheet.getRow(0);
         int colNum = row.getPhysicalNumberOfCells();
-        List<? extends PictureData> pictures = wb.getAllPictures();
-        File picTmpPath = new File("D:\\tmp\\");
-        for (int i = 0; i < pictures.size(); i++) {
-            try {
-                FileOutputStream out = new FileOutputStream(
-                        "D:\\tmp\\" + String.valueOf(i) + ".png");
-                out.write(pictures.get(i).getData());
-                out.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
 
 
         // 正文内容应该从第二行开始,第一行为表头的标题
