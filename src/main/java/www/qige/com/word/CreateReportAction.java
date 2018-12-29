@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.text.DecimalFormat;
 import java.util.*;
@@ -33,12 +34,12 @@ public class CreateReportAction extends JFrame implements ActionListener {
             "4.点击生成报告，弹出生成报告成功后，在report文件夹下生成报告\n");
     private Map<Integer, Map<Integer, Object>> personInfo;
     private Map<Integer, Map<Integer, Object>> resultInfo;
+    private Map<Integer, Map<Integer, Object>> properties;
     private java.util.List<String> resultTime = new ArrayList<>();
     private Map<String, Map<Integer, Object>> resultMap = new HashMap<>();
     private Map<String, Map<Integer, Object>> picConfigMap = new HashMap<>();
     private Map<Integer, Map<Integer, Object>> config = new HashMap<>();
     java.util.List<ReportEntity> reportList = new ArrayList<ReportEntity>();
-    Properties properties = new Properties();
 
     public CreateReportAction() {
         jbPerson.setActionCommand("openPerson");
@@ -73,14 +74,8 @@ public class CreateReportAction extends JFrame implements ActionListener {
         try {
             config = new ReadConfigExcelUtils("template\\config.xlsx").readExcelContent();
 //            config = new ReadConfigExcelUtils("D:\\ideaWork\\out\\artifacts\\worReport_jar\\template\\config.xlsx").readExcelContent();
-            // 使用InPutStream流读取properties文件
-            BufferedReader bufferedReader = new BufferedReader(new FileReader("template\\riskLevel.properties"));
-            properties.load(bufferedReader);
-            System.out.println(properties.getProperty("正常"));
-            System.out.println(properties.getProperty("一般"));
-            System.out.println(properties.getProperty("关注"));
-            System.out.println(properties.getProperty("特别关注"));
-            System.out.println(properties.getProperty("重视"));
+//             使用InPutStream流读取properties文件
+            properties = new ReadPersonExcelUtils("template\\riskLevel.xlsx").readExcelContent();
             ReadPicConfigExcelUtils readPicConfigExcelUtils = new ReadPicConfigExcelUtils("template\\picConfig.xlsx");
             Map<Integer, Map<Integer, Object>> integerMapMap = readPicConfigExcelUtils.readExcelContent();
             for (Map.Entry<Integer, Map<Integer, Object>> entry : integerMapMap.entrySet()){
@@ -191,16 +186,16 @@ public class CreateReportAction extends JFrame implements ActionListener {
                                 p53Type = getP53Type(p53Res);
                                 if (p53Type.isEmpty()) continue;//跳出循环
                                 entity.setP53Type(p53Type);
-                                entity.setP53Pic1(getPic(entity.getP53Type(),"rs1042522"));
+                                entity.setP53Pic1(getPic(entity.getP53Res(),"rs1042522"));
                                 PictureData apoePic1;
                                 if ("男".equals(sex)) {
                                     apoeRes = (String) resultMap.get(num + "rs429358").get(5);
                                     apoeType = getApoeType(apoeRes);
-                                    apoePic1 = getPic(apoeType,"rs429358");
+                                    apoePic1 = getPic(apoeRes,"rs429358");
                                 } else {
                                     apoeRes = (String) resultMap.get(num + "rs1801133").get(5);
                                     apoeType = getMTHFRType(apoeRes);
-                                    apoePic1 = getPic(apoeType,"rs1801133");
+                                    apoePic1 = getPic(apoeRes,"rs1801133");
                                 }
                                 entity.setApoeRes(apoeRes);
                                 if (apoeType.isEmpty()) continue;
@@ -1204,11 +1199,11 @@ public class CreateReportAction extends JFrame implements ActionListener {
     }
 
     private String getRiskLevel(double sum, String level) {
-        double 正常 = Double.parseDouble(properties.getProperty("正常"));
-        double 一般 = Double.parseDouble(properties.getProperty("一般"));
-        double 关注 = Double.parseDouble(properties.getProperty("关注"));
-        double 特别关注 = Double.parseDouble(properties.getProperty("特别关注"));
-        double 重视 = Double.parseDouble(properties.getProperty("重视"));
+        double 正常 = Double.parseDouble((String)properties.get(1).get(1));
+        double 一般 = Double.parseDouble((String)properties.get(2).get(1));
+        double 关注 = Double.parseDouble((String)properties.get(3).get(1));
+        double 特别关注 = Double.parseDouble((String)properties.get(4).get(1));
+        double 重视 = Double.parseDouble((String)properties.get(5).get(1));
         if (sum == 正常) {
             level = "正常";
         } else if (sum > 正常 && sum <= 一般) {
